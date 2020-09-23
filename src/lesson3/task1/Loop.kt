@@ -10,6 +10,8 @@ import kotlin.math.*
 // Рекомендуемое количество баллов = 7
 // Вместе с предыдущими уроками = 16/21
 
+fun myPow(n: Int, m: Int): Int = exp(m * ln(n.toDouble())).toInt()
+
 /**
  * Пример
  *
@@ -77,7 +79,7 @@ fun digitNumber(n: Int): Int {
     var count = 1
     var k = abs(n) / 10
     while (k > 0) {
-        count += 1
+        count++
         k /= 10
     }
     return count
@@ -108,11 +110,9 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var minimum = n
-    for (i in 2..n) {
-        if (n % i == 0 && i < minimum) minimum = i
-    }
-    return minimum
+    for (i in 2..sqrt(n.toDouble()).toInt())
+        if (n % i == 0) return i
+    return n
 }
 
 /**
@@ -121,12 +121,11 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var maximum = 1
-    for (i in 2 until n) {
-        if (n % i == 0 && i > maximum) maximum = i
-    }
-    return maximum
+    for (i in n - 1 downTo 1)
+        if (n % i == 0) return i
+    return n
 }
+
 
 /**
  * Простая (2 балла)
@@ -162,13 +161,13 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var commonMultiple = 0
-    for (i in 1..m * n)
-        if (i % m == 0 && i % n == 0) {
-            commonMultiple = i
-            break
-        }
-    return commonMultiple
+    var m1 = m
+    var n1 = n
+    while (m1 != n1) {
+        if (m1 > n1) m1 -= n1
+        else n1 -= m1
+    }
+    return n * m / m1
 }
 
 /**
@@ -193,9 +192,9 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in sqrt(m.toDouble()).toInt()..sqrt(n.toDouble()).toInt())
-        if (sqr(i) in m..n) return true
-    return false
+    val i = sqrt(m.toDouble()).toInt()
+    if (sqr(i) == m) return true
+    return sqr(i + 1) in m..n
 }
 
 /**
@@ -214,7 +213,7 @@ fun revert(n: Int): Int {
         k /= 10
     }
     for (i in 1..count)
-        revertDigit += (n % (10.0.pow(i)).toInt() / (10.0.pow(i - 1)).toInt()) * (10.0.pow(count - i)).toInt()
+        revertDigit += (n % myPow(10, i) / myPow(10, i - 1)) * myPow(10, count - i)
     return revertDigit
 }
 
@@ -230,16 +229,15 @@ fun revert(n: Int): Int {
 fun isPalindrome(n: Int): Boolean {
     var k = n
     var count = 0
-    var sum = 0
     while (k > 0) {
         count++
         k /= 10
     }
     if (count == 1) return true
-    for (i in 1..count / 2)
-        if (n % (10.0.pow(i)).toInt() / (10.0.pow(i - 1)).toInt() == n / (10.0.pow(count - i)).toInt() % 10)
-            sum++
-    return sum == count / 2
+    for (i in 1..count)
+        if (n % myPow(10, i) / myPow(10, i - 1) != revert(n) % myPow(10, i) / myPow(10, i - 1))
+            return false
+    return true
 }
 
 /**
@@ -259,8 +257,8 @@ fun hasDifferentDigits(n: Int): Boolean {
     }
     for (i in 1..count)
         for (j in 1 until count)
-            if (n % (10.0.pow(i)).toInt() / (10.0.pow(i - 1)).toInt() !=
-                n % (10.0.pow(j)).toInt() / (10.0.pow(j - 1)).toInt()
+            if (n % myPow(10, i) / myPow(10, i - 1) !=
+                n % myPow(10, j) / myPow(10, j - 1)
             ) return true
     return false
 }
