@@ -70,8 +70,8 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     return when {
-        (age % 10 == 1 && age % 100 !in 5..20) -> "$age год"
-        (age % 10 in 2..4 && age % 100 !in 5..20) -> "$age года"
+        age % 10 == 1 && age % 100 !in 5..20 -> "$age год"
+        age % 10 in 2..4 && age % 100 !in 5..20 -> "$age года"
         else -> "$age лет"
     }
 }
@@ -157,9 +157,9 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val min = min(min(a, b), c)
     val mm = a + b + c - min - max
     if ((a < b + c) && (b < a + c) && (c < a + b)) return when {
-        (sqr(max) == (sqr(mm) + sqr(min))) -> 1
-        (sqr(max) > (sqr(mm) + sqr(min))) -> 2
-        (sqr(max) < (sqr(mm) + sqr(min))) -> 0
+        sqr(max) == (sqr(mm) + sqr(min)) -> 1
+        sqr(max) > (sqr(mm) + sqr(min)) -> 2
+        sqr(max) < (sqr(mm) + sqr(min)) -> 0
         else -> -1
     }
     return -1
@@ -175,8 +175,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     return when {
-        ((a == b) && ((a == c) || (a == d)) && (c != d)) ||
-                ((a != b) && ((c == a) || (c == b)) && (c == d)) || ((a == b) && (b == c) && (c == d)) -> 0
+        b - c == 0 || a - d == 0 -> 0
         (c >= a) && (b >= d) -> d - c
         (a >= c) && (d >= b) -> b - a
         (c > a) && (d > b) && (b >= c) -> b - c
