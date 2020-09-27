@@ -3,12 +3,17 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import lesson3.task1.myPow
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
 // Рекомендуемое количество баллов = 8
 // Вместе с предыдущими уроками = 24/33
+
+fun isPrime(n: Int) = n >= 2 && (2..n / 2).all { n % it != 0 }
 
 /**
  * Пример
@@ -120,14 +125,25 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var abs = 0.0
+    for (element in v) {
+        abs += sqr(element)
+    }
+    return sqrt(abs)
+}
 
 /**
  * Простая (2 балла)
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    var result = 0.0
+    if (list.isEmpty()) return 0.0
+    for (element in list) result += element
+    return result / list.size
+}
 
 /**
  * Средняя (3 балла)
@@ -137,7 +153,13 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    if (list.isEmpty()) return list
+    var mean = 0.0
+    for (element in list) mean += element
+    for (i in 0 until list.size) list[i] -= mean / list.size
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -146,7 +168,11 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int = TODO()
+fun times(a: List<Int>, b: List<Int>): Int {
+    var c = 0
+    for (i in a.indices) c += (a[i] * b[i])
+    return c
+}
 
 /**
  * Средняя (3 балла)
@@ -156,7 +182,12 @@ fun times(a: List<Int>, b: List<Int>): Int = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    if (p.isEmpty()) return 0
+    var result = p[0]
+    for (i in 1 until p.size) result += p[i] * (x.toDouble().pow(i)).toInt()
+    return result
+}
 
 /**
  * Средняя (3 балла)
@@ -168,7 +199,15 @@ fun polynom(p: List<Int>, x: Int): Int = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
+fun accumulate(list: MutableList<Int>): MutableList<Int> {
+    if (list.isEmpty()) return list
+    var sum = list[0]
+    for (i in 1 until list.size) {
+        sum += list[i]
+        list[i] = sum
+    }
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -177,7 +216,22 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    val list = mutableListOf<Int>()
+    if (isPrime(n)) return listOf(n)
+    var nCpy = n
+    var i = 2
+    var sum = 1
+    while (nCpy != 1) {
+        if (isPrime(i) && nCpy % i == 0) {
+            list.add(i)
+            nCpy /= i
+            sum *= i
+        }
+        if (nCpy % i != 0) i++
+    }
+    return list
+}
 
 /**
  * Сложная (4 балла)
@@ -186,7 +240,22 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    if (isPrime(n)) return "$n"
+    var str = ""
+    var nCpy = n
+    var i = 2
+    var sum = 1
+    while (nCpy != 1) {
+        if (isPrime(i) && nCpy % i == 0) {
+            str += "$i*"
+            nCpy /= i
+            sum *= i
+        }
+        if (nCpy % i != 0) i++
+    }
+    return str.substring(0, str.length - 1)
+}
 
 /**
  * Средняя (3 балла)
