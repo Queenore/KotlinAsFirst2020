@@ -10,7 +10,12 @@ import kotlin.math.*
 // Рекомендуемое количество баллов = 7
 // Вместе с предыдущими уроками = 16/21
 
-fun myPow(n: Int, m: Int): Int = exp(m * ln(n.toDouble())).toInt()
+fun pow(n: Int, m: Int): Int {
+    if (m == 0) return 1
+    var result = n
+    for (i in 2..m) result *= n
+    return result
+}
 
 /**
  * Пример
@@ -205,15 +210,18 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var k = n
+    var digit = n
     var count = 0
     var revertDigit = 0
-    while (k > 0) {
+    while (digit > 0) {
         count++
-        k /= 10
+        digit /= 10
     }
-    for (i in 1..count)
-        revertDigit += (n % myPow(10, i) / myPow(10, i - 1)) * myPow(10, count - i)
+    digit = n
+    for (i in 1..count) {
+        revertDigit += (digit % 10) * pow(10, count - i)
+        digit /= 10
+    }
     return revertDigit
 }
 
@@ -226,19 +234,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var k = n
-    var count = 0
-    while (k > 0) {
-        count++
-        k /= 10
-    }
-    if (count == 1) return true
-    for (i in 1..count)
-        if (n % myPow(10, i) / myPow(10, i - 1) != revert(n) % myPow(10, i) / myPow(10, i - 1))
-            return false
-    return true
-}
+fun isPalindrome(n: Int): Boolean = (n == revert(n))
 
 /**
  * Средняя (3 балла)
@@ -257,8 +253,8 @@ fun hasDifferentDigits(n: Int): Boolean {
     }
     for (i in 1..count)
         for (j in 1 until count)
-            if (n % myPow(10, i) / myPow(10, i - 1) !=
-                n % myPow(10, j) / myPow(10, j - 1)
+            if (n % pow(10, i) / pow(10, i - 1) !=
+                n % pow(10, j) / pow(10, j - 1)
             ) return true
     return false
 }
