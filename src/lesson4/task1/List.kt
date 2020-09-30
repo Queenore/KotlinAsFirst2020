@@ -4,8 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
-import lesson3.task1.myPow
-import kotlin.math.pow
+import lesson3.task1.pow
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -139,10 +138,8 @@ fun abs(v: List<Double>): Double {
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    var result = 0.0
     if (list.isEmpty()) return 0.0
-    for (element in list) result += element
-    return result / list.size
+    return list.sum() / list.size
 }
 
 /**
@@ -155,8 +152,7 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     if (list.isEmpty()) return list
-    var mean = 0.0
-    for (element in list) mean += element
+    val mean = list.sum()
     for (i in 0 until list.size) list[i] -= mean / list.size
     return list
 }
@@ -185,7 +181,7 @@ fun times(a: List<Int>, b: List<Int>): Int {
 fun polynom(p: List<Int>, x: Int): Int {
     if (p.isEmpty()) return 0
     var result = p[0]
-    for (i in 1 until p.size) result += p[i] * (x.toDouble().pow(i)).toInt()
+    for (i in 1 until p.size) result += p[i] * pow(x, i)
     return result
 }
 
@@ -223,7 +219,7 @@ fun factorize(n: Int): List<Int> {
     var i = 2
     var sum = 1
     while (nCpy != 1) {
-        if (isPrime(i) && nCpy % i == 0) {
+        if (nCpy % i == 0) {
             list.add(i)
             nCpy /= i
             sum *= i
@@ -247,7 +243,7 @@ fun factorizeToString(n: Int): String {
     var i = 2
     var sum = 1
     while (nCpy != 1) {
-        if (isPrime(i) && nCpy % i == 0) {
+        if (nCpy % i == 0) {
             str += "$i*"
             nCpy /= i
             sum *= i
@@ -264,7 +260,19 @@ fun factorizeToString(n: Int): String {
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    val list = mutableListOf<Int>()
+    if (n <= base) {
+        list.add(n)
+        return list
+    }
+    var nCpy = n
+    while (nCpy > 0) {
+        list.add(0, nCpy % base)
+        nCpy /= base
+    }
+    return list
+}
 
 /**
  * Сложная (4 балла)
@@ -277,7 +285,14 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String = TODO()
+fun convertToString(n: Int, base: Int): String {
+    val convertN = convert(n, base)
+    var str = ""
+    for (i in convertN.indices)
+        if (convertN[i] >= 10) str += (87 + convertN[i] % base).toChar()
+        else str += convertN[i]
+    return str
+}
 
 /**
  * Средняя (3 балла)
@@ -286,7 +301,12 @@ fun convertToString(n: Int, base: Int): String = TODO()
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var result = 0
+    for ((k, i) in (digits.size - 1 downTo 0).withIndex())
+        result += digits[i] * pow(base, k)
+    return result
+}
 
 /**
  * Сложная (4 балла)
