@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import lesson3.task1.count
 import lesson3.task1.pow
 import kotlin.math.sqrt
 
@@ -320,7 +321,14 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var result = 0
+    for ((k, i) in (str.length - 1 downTo 0).withIndex()) {
+        result += if (str[i].isDigit()) (str[i].toInt() - 48) * pow(base, k)
+        else (str[i].toInt() - 87) * pow(base, k)
+    }
+    return result
+}
 
 /**
  * Сложная (5 баллов)
@@ -330,7 +338,12 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+//fun roman(n: Int): String {
+//    var count = count(n)
+//    var result = 0
+//
+//    return result
+//}
 
 /**
  * Очень сложная (7 баллов)
