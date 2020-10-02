@@ -17,6 +17,16 @@ fun pow(n: Int, m: Int): Int {
     return result
 }
 
+fun count(n: Int): Int {
+    var count = 0
+    var nCpy = n
+    while (nCpy > 0) {
+        count++
+        nCpy /= 10
+    }
+    return count
+}
+
 /**
  * Пример
  *
@@ -245,12 +255,7 @@ fun isPalindrome(n: Int): Boolean = (n == revert(n))
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var count = 0
-    var k = n
-    while (k > 0) {
-        count++
-        k /= 10
-    }
+    val count = count(n)
     for (i in 1..count)
         for (j in 1 until count)
             if (n % pow(10, i) / pow(10, i - 1) !=
