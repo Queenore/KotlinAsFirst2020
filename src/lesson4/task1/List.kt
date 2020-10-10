@@ -4,7 +4,6 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
-import lesson3.task1.count
 import lesson3.task1.pow
 import kotlin.math.sqrt
 
@@ -237,22 +236,7 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-    if (isPrime(n)) return "$n"
-    var str = ""
-    var nCpy = n
-    var i = 2
-    var sum = 1
-    while (nCpy != 1) {
-        if (nCpy % i == 0) {
-            str += "$i*"
-            nCpy /= i
-            sum *= i
-        }
-        if (nCpy % i != 0) i++
-    }
-    return str.substring(0, str.length - 1)
-}
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя (3 балла)
@@ -290,7 +274,7 @@ fun convertToString(n: Int, base: Int): String {
     val convertN = convert(n, base)
     var str = ""
     for (i in convertN.indices)
-        if (convertN[i] >= 10) str += (87 + convertN[i] % base).toChar()
+        if (convertN[i] >= 10) str += ('a'.toInt() - 10 + convertN[i] % base).toChar()
         else str += convertN[i]
     return str
 }
@@ -324,8 +308,8 @@ fun decimal(digits: List<Int>, base: Int): Int {
 fun decimalFromString(str: String, base: Int): Int {
     var result = 0
     for ((k, i) in (str.length - 1 downTo 0).withIndex()) {
-        result += if (str[i].isDigit()) (str[i].toInt() - 48) * pow(base, k)
-        else (str[i].toInt() - 87) * pow(base, k)
+        result += if (str[i].isDigit()) (str[i].toInt() - '0'.toInt()) * pow(base, k)
+        else (str[i].toInt() - 'a'.toInt() + 10) * pow(base, k)
     }
     return result
 }
