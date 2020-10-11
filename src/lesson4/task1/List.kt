@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import lesson3.task1.count
 import lesson3.task1.pow
 import kotlin.math.sqrt
 
@@ -13,6 +14,45 @@ import kotlin.math.sqrt
 // Вместе с предыдущими уроками = 24/33
 
 fun isPrime(n: Int) = n >= 2 && (2..n / 2).all { n % it != 0 }
+
+fun digitConverter(n: Int, step: Int): String {
+    return when {
+        n == 1 && step == 1 ->  "I"
+        n == 2 && step == 1 -> "II"
+        n == 3 && step == 1 -> "III"
+        n == 4 && step == 1 -> "IV"
+        n == 5 && step == 1 -> "V"
+        n == 6 && step == 1 -> "VI"
+        n == 7 && step == 1 -> "VII"
+        n == 8 && step == 1 -> "VIII"
+        n == 9 && step == 1 -> "IX"
+
+        n == 1 && step == 2 -> "X"
+        n == 2 && step == 2 -> "XX"
+        n == 3 && step == 2 -> "XXX"
+        n == 4 && step == 2 -> "XL"
+        n == 5 && step == 2 -> "L"
+        n == 6 && step == 2 -> "LX"
+        n == 7 && step == 2 -> "LXX"
+        n == 8 && step == 2 -> "LXXX"
+        n == 9 && step == 2 -> "XC"
+
+        n == 1 && step == 3 -> "C"
+        n == 2 && step == 3 -> "CC"
+        n == 3 && step == 3 -> "CCC"
+        n == 4 && step == 3 -> "CD"
+        n == 5 && step == 3 -> "D"
+        n == 6 && step == 3 -> "DC"
+        n == 7 && step == 3 -> "DCC"
+        n == 8 && step == 3 -> "DCCC"
+        n == 9 && step == 3 -> "CM"
+
+        n == 1 && step == 4 -> "M"
+        n == 2 && step == 4 -> "MM"
+        n == 3 && step == 4 -> "MMM"
+        else -> ""
+    }
+}
 
 /**
  * Пример
@@ -322,7 +362,18 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var step = count(n)
+    var number = n
+    val result = StringBuilder()
+    for (i in count(n) downTo 1) {
+        if (number / pow(10, i - 1) != 0)
+            result.append(digitConverter(number / pow(10, i - 1), step))
+        step--
+        number %= pow(10, i - 1)
+    }
+    return result.toString()
+}
 
 /**
  * Очень сложная (7 баллов)
