@@ -17,7 +17,7 @@ fun isPrime(n: Int) = n >= 2 && (2..n / 2).all { n % it != 0 }
 
 fun digitConverter(n: Int, step: Int): String {
     return when {
-        n == 1 && step == 1 ->  "I"
+        n == 1 && step == 1 -> "I"
         n == 2 && step == 1 -> "II"
         n == 3 && step == 1 -> "III"
         n == 4 && step == 1 -> "IV"
@@ -50,6 +50,82 @@ fun digitConverter(n: Int, step: Int): String {
         n == 1 && step == 4 -> "M"
         n == 2 && step == 4 -> "MM"
         n == 3 && step == 4 -> "MMM"
+        else -> ""
+    }
+}
+
+fun digitInString(n: Int, step: Int): String {
+    return when {
+        n == 1 && step == 1 -> "один "
+        n == 2 && step == 1 -> "два "
+        n == 3 && step == 1 -> "три "
+        n == 4 && step == 1 -> "четыре "
+        n == 5 && step == 1 -> "пять "
+        n == 6 && step == 1 -> "шесть "
+        n == 7 && step == 1 -> "семь "
+        n == 8 && step == 1 -> "восемь "
+        n == 9 && step == 1 -> "девять "
+
+        n == 10 && step == 2 -> "десять "
+        n == 11 && step == 2 -> "одиннадцать "
+        n == 12 && step == 2 -> "двенадцать "
+        n == 13 && step == 2 -> "тринадцать "
+        n == 14 && step == 2 -> "четырнадцать "
+        n == 15 && step == 2 -> "пятьнадцать "
+        n == 16 && step == 2 -> "шестьнадцать "
+        n == 17 && step == 2 -> "семьнадцать "
+        n == 18 && step == 2 -> "восемьнадцать "
+        n == 19 && step == 2 -> "девятьнадцать "
+
+        n == 2 && (step == 2 || step == 5) -> "двадцать "
+        n == 3 && (step == 2 || step == 5) -> "тридцать "
+        n == 4 && (step == 2 || step == 5) -> "сорок "
+        n == 5 && (step == 2 || step == 5) -> "пятьдесят "
+        n == 6 && (step == 2 || step == 5) -> "шестьдесят "
+        n == 7 && (step == 2 || step == 5) -> "семьдесят "
+        n == 8 && (step == 2 || step == 5) -> "восемьдесят "
+        n == 9 && (step == 2 || step == 5) -> "девяносто "
+
+        n == 1 && step == 3 -> "сто "
+        n == 2 && step == 3 -> "двести "
+        n == 3 && step == 3 -> "триста "
+        n == 4 && step == 3 -> "четыреста "
+        n == 5 && step == 3 -> "пятьсот "
+        n == 6 && step == 3 -> "шестьсот "
+        n == 7 && step == 3 -> "семьсот "
+        n == 8 && step == 3 -> "восемьсот "
+        n == 9 && step == 3 -> "девятьсот "
+
+        n == 1 && step == 4 -> "одна тысяча "
+        n == 2 && step == 4 -> "две тысячи "
+        n == 3 && step == 4 -> "три тысячи "
+        n == 4 && step == 4 -> "четыре тысячи "
+        n == 5 && step == 4 -> "пять тысяч "
+        n == 6 && step == 4 -> "шесть тысяч "
+        n == 7 && step == 4 -> "семь тысяч "
+        n == 8 && step == 4 -> "восемь тысяч "
+        n == 9 && step == 4 -> "девять тысяч "
+
+        n == 10 && step == 5 -> "десять тысяч "
+        n == 11 && step == 5 -> "одиннадцать тысяч "
+        n == 12 && step == 5 -> "двенадцать тысяч "
+        n == 13 && step == 5 -> "тринадцать тысячи "
+        n == 14 && step == 5 -> "четырнадцать тысяч "
+        n == 15 && step == 5 -> "пятнадцать тысяч "
+        n == 16 && step == 5 -> "шестнадцать тясяч "
+        n == 17 && step == 5 -> "семнадцать тысяч "
+        n == 18 && step == 5 -> "восемнадцать тысяч "
+        n == 19 && step == 5 -> "девятнадцать тысяч "
+
+        n == 1 && step == 6 -> "сто тысяч "
+        n == 2 && step == 6 -> "двести тысяч "
+        n == 3 && step == 6 -> "триста тысяч "
+        n == 4 && step == 6 -> "четыреста тысяч "
+        n == 5 && step == 6 -> "пятьсот тысяч "
+        n == 6 && step == 6 -> "шестьсот тысяч "
+        n == 7 && step == 6 -> "семьсот тысяч "
+        n == 8 && step == 6 -> "восемьсот тысяч "
+        n == 9 && step == 6 -> "девятьсот тысяч "
         else -> ""
     }
 }
@@ -382,4 +458,30 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val result = StringBuilder()
+    var number = n
+    var step = count(n)
+    var temporaryString: String
+    while (step > 0) {
+        if (step == 6 && number % pow(10, step - 1) / pow(10, step - 2) != 0) {
+            temporaryString = digitInString(number / pow(10, step - 1), step)
+            result.append(temporaryString.substring(0, temporaryString.length - 6))
+            number %= pow(10, step - 1)
+            step--
+        } else if ((step == 2 || step == 5) && number / pow(10, step - 1) == 1) {
+            result.append(digitInString(10 + number % pow(10, step - 1) / pow(10, step - 2), step))
+            number %= pow(10, step - 1)
+            number %= pow(10, step - 2)
+            step -= 2
+        } else if (number / pow(10, step - 1) != 0) {
+            result.append(digitInString(number / pow(10, step - 1), step))
+            number %= pow(10, step - 1)
+            step--
+        } else {
+            number %= pow(10, step - 1)
+            step--
+        }
+    }
+    return result.toString().substring(0, result.length - 1)
+}
