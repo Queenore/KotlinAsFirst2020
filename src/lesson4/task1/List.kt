@@ -439,14 +439,12 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var step = count(n)
     var number = n
     val result = StringBuilder()
-    for (i in count(n) downTo 1) {
-        if (number / pow(10, i - 1) != 0)
-            result.append(digitConverter(number / pow(10, i - 1), step))
-        step--
-        number %= pow(10, i - 1)
+    for (step in count(n) downTo 1) {
+        if (number / pow(10, step - 1) != 0)
+            result.append(digitConverter(number / pow(10, step - 1), step))
+        number %= pow(10, step - 1)
     }
     return result.toString()
 }
