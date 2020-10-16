@@ -473,7 +473,7 @@ fun russian(n: Int): String {
     while (step > 0) {
         if (step == 5 && numberOfDigits(number) < 4) {
             result.append("тысяч ")
-            step -= 2
+            step = numberOfDigits(number)
         } else if ((step == 2 || step == 5) && number / pow(10, step - 1) == 1) {
             result.append(digitInString(10 + number % pow(10, step - 1) / pow(10, step - 2), step))
             number %= pow(10, step - 1)
