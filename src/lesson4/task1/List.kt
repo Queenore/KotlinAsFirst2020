@@ -471,7 +471,7 @@ fun russian(n: Int): String {
     var number = n
     var step = count(n)
     while (step > 0) {
-        if (step == 5 && numberOfDigits(number) < 4) {
+        if (step == 4 && numberOfDigits(number) < 4) {
             result.append("тысяч ")
             step = numberOfDigits(number)
         } else if ((step == 2 || step == 5) && number / pow(10, step - 1) == 1) {
