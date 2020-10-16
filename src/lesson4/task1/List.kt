@@ -71,11 +71,11 @@ fun digitInString(n: Int, step: Int): String {
         n == 12 && step == 2 -> "двенадцать "
         n == 13 && step == 2 -> "тринадцать "
         n == 14 && step == 2 -> "четырнадцать "
-        n == 15 && step == 2 -> "пятьнадцать "
-        n == 16 && step == 2 -> "шестьнадцать "
-        n == 17 && step == 2 -> "семьнадцать "
-        n == 18 && step == 2 -> "восемьнадцать "
-        n == 19 && step == 2 -> "девятьнадцать "
+        n == 15 && step == 2 -> "пятнадцать "
+        n == 16 && step == 2 -> "шестнадцать "
+        n == 17 && step == 2 -> "семнадцать "
+        n == 18 && step == 2 -> "восемнадцать "
+        n == 19 && step == 2 -> "девятнадцать "
 
         n == 2 && (step == 2 || step == 5) -> "двадцать "
         n == 3 && (step == 2 || step == 5) -> "тридцать "
@@ -117,15 +117,15 @@ fun digitInString(n: Int, step: Int): String {
         n == 18 && step == 5 -> "восемнадцать тысяч "
         n == 19 && step == 5 -> "девятнадцать тысяч "
 
-        n == 1 && step == 6 -> "сто тысяч "
-        n == 2 && step == 6 -> "двести тысяч "
-        n == 3 && step == 6 -> "триста тысяч "
-        n == 4 && step == 6 -> "четыреста тысяч "
-        n == 5 && step == 6 -> "пятьсот тысяч "
-        n == 6 && step == 6 -> "шестьсот тысяч "
-        n == 7 && step == 6 -> "семьсот тысяч "
-        n == 8 && step == 6 -> "восемьсот тысяч "
-        n == 9 && step == 6 -> "девятьсот тысяч "
+        n == 1 && step == 6 -> "сто "
+        n == 2 && step == 6 -> "двести "
+        n == 3 && step == 6 -> "триста "
+        n == 4 && step == 6 -> "четыреста "
+        n == 5 && step == 6 -> "пятьсот "
+        n == 6 && step == 6 -> "шестьсот "
+        n == 7 && step == 6 -> "семьсот "
+        n == 8 && step == 6 -> "восемьсот "
+        n == 9 && step == 6 -> "девятьсот "
         else -> ""
     }
 }
@@ -456,17 +456,24 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
+fun numberOfDigits(n: Int): Int {
+    var number = n
+    var result = 0
+    while (number > 0) {
+        result++
+        number /= 10
+    }
+    return result
+}
+
 fun russian(n: Int): String {
     val result = StringBuilder()
     var number = n
     var step = count(n)
-    var temporaryString: String
     while (step > 0) {
-        if (step == 6 && number % pow(10, step - 1) / pow(10, step - 2) != 0) {
-            temporaryString = digitInString(number / pow(10, step - 1), step)
-            result.append(temporaryString.substring(0, temporaryString.length - 6))
-            number %= pow(10, step - 1)
-            step--
+        if (step == 5 && numberOfDigits(number) < 4) {
+            result.append("тысяч ")
+            step -= 2
         } else if ((step == 2 || step == 5) && number / pow(10, step - 1) == 1) {
             result.append(digitInString(10 + number % pow(10, step - 1) / pow(10, step - 2), step))
             number %= pow(10, step - 1)
