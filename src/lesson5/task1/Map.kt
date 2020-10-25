@@ -96,7 +96,14 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val result = mutableMapOf<Int, MutableList<String>>()
+    for ((key, value) in grades) {
+        if (result.containsKey(value)) result[value]?.add(key)
+        else result[value] = mutableListOf(key)
+    }
+    return result
+}
 
 /**
  * Простая (2 балла)
@@ -108,7 +115,11 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    for ((key) in a)
+        if (a[key] != b[key]) return false
+    return true
+}
 
 /**
  * Простая (2 балла)
@@ -124,8 +135,10 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    TODO()
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMap<String, String> {
+    for ((key) in b)
+        if (a.contains(key) && a[key] == b[key]) a.remove(key)
+    return a
 }
 
 /**
@@ -135,7 +148,15 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяюихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
+    val map = mutableMapOf<String, Int>()
+    val result = mutableListOf<String>()
+    for (first in a)
+        for (second in b)
+            if (first == second && !map.containsKey(first)) map[first] = 1
+    for ((key) in map) result.add(key)
+    return result
+}
 
 /**
  * Средняя (3 балла)
@@ -154,7 +175,14 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val result = mapA.toMutableMap()
+    for ((key, value) in mapB) {
+        if (!result.contains(key)) result[key] = value
+        else if (value != result[key]) result[key] += ", $value"
+    }
+    return result
+}
 
 /**
  * Средняя (4 балла)
@@ -166,7 +194,18 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val result = mutableMapOf<String, Double>()
+    val count = mutableMapOf<String, Double>()
+    for ((key, value) in stockPrices) {
+        if (!result.contains(key)) result[key] = value
+        else result[key] = result[key]!! + value
+        if (!count.contains(key)) count[key] = 1.0
+        else count[key] = count[key]!! + 1.0
+    }
+    for ((key) in result) result[key] = result[key]!! / count[key]!!
+    return result
+}
 
 /**
  * Средняя (4 балла)
@@ -258,7 +297,45 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *          "GoodGnome" to setOf()
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val result = mutableMapOf<String, MutableSet<String>>()
+    var person: String
+    var set: MutableSet<String>
+    var count = 0
+    for ((key, value) in friends) {
+        for (elem in value) {
+            if (!result.contains(key)) result[key] = mutableSetOf(elem)
+            else result[key]!!.add(elem)
+        }
+        if (value.isNullOrEmpty()) result[key] = mutableSetOf()
+    }
+    for ((_, value) in friends)
+        for (elem in value)
+            if (!result.contains(elem)) result[elem] = mutableSetOf()
+    for ((key, value) in friends) {
+        if (!value.isNullOrEmpty())
+            for (elem in value) {
+                person = elem
+                set = mutableSetOf(key)
+                while (true) {
+                    if (!friends[person].isNullOrEmpty())
+                        for (elem2 in friends[person]!!)
+                            if (!value.contains(elem2) && elem2 != key) {
+                                if (!result.contains(key)) result[key] = mutableSetOf(elem2)
+                                else result[key]!!.add(elem2)
+                                if (!friends.contains(person) || set.contains(person)) count++
+                                set.add(person)
+                                person = elem2
+                            } else count++
+                    else break
+                    if (count > 0) break
+                }
+                count = 0
+                set.clear()
+            }
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
