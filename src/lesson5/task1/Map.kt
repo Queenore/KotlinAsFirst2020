@@ -222,7 +222,23 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var result = ""
+    var min = 0.0
+    var count = 0
+    for ((key, value) in stuff) {
+        if (value.first == kind && count == 0) {
+            count++
+            result = key
+            min = value.second
+        } else if (value.first == kind && value.second < min) {
+            result = key
+            min = value.second
+        }
+    }
+    if (min == 0.0) return null
+    return result
+}
 
 /**
  * Средняя (3 балла)
@@ -233,7 +249,11 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    for (i in word.indices)
+        if (!chars.contains(word[i])) return false
+    return true
+}
 
 /**
  * Средняя (4 балла)
@@ -247,7 +267,15 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val result = mutableMapOf<String, Int>()
+    for (elem in list)
+        if (!result.contains(elem)) result[elem] = 1
+        else result[elem] = result[elem]!!.plus(1)
+    for (elem in list)
+        if (result[elem] == 1) result.remove(elem)
+    return result
+}
 
 /**
  * Средняя (3 балла)
@@ -261,7 +289,20 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    var count = 0
+    for (elem1 in words) {
+        for (elem2 in words) {
+            if (elem1 == elem2 || elem1.length != elem2.length) break
+            for (i in elem2) {
+                if (elem1.contains(i)) count++
+            }
+            if (count == elem1.length) return true
+            count = 0
+        }
+    }
+    return false
+}
 
 /**
  * Сложная (5 баллов)
@@ -319,7 +360,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
                 set = mutableSetOf(key)
                 while (true) {
                     if (!friends[person].isNullOrEmpty())
-                        for (elem2 in friends[person]!!)
+                        for (elem2 in friends[person] ?: error(""))
                             if (!value.contains(elem2) && elem2 != key) {
                                 if (!result.contains(key)) result[key] = mutableSetOf(elem2)
                                 else result[key]!!.add(elem2)
