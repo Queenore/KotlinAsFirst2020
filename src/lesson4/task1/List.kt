@@ -224,8 +224,7 @@ fun factorize(n: Int): List<Int> {
             list.add(i)
             nCpy /= i
             sum *= i
-        }
-        else if (nCpy % i != 0) i++
+        } else if (nCpy % i != 0) i++
     }
     return list
 }
