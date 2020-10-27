@@ -4,7 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
-import lesson3.task1.count
+import lesson3.task1.digitNumber
 import lesson3.task1.pow
 import kotlin.math.sqrt
 
@@ -366,7 +366,7 @@ fun digitConverter(n: Int, step: Int): String {
 fun roman(n: Int): String {
     var number = n
     val result = StringBuilder()
-    for (step in count(n) downTo 1) {
+    for (step in digitNumber(n) downTo 1) {
         if (number / pow(10, step - 1) != 0)
             result.append(digitConverter(number / pow(10, step - 1), step))
         number %= pow(10, step - 1)
@@ -461,11 +461,11 @@ fun digitInString(n: Int, step: Int): String {
 fun russian(n: Int): String {
     val result = StringBuilder()
     var number = n
-    var step = count(n)
+    var step = digitNumber(n)
     while (step > 0) {
-        if (step == 4 && count(number) < 4) {
+        if (step == 4 && digitNumber(number) < 4) {
             result.append("тысяч ")
-            step = count(number)
+            step = digitNumber(number)
         } else if ((step == 2 || step == 5) && number / pow(10, step - 1) == 1) {
             result.append(digitInString(10 + number % pow(10, step - 1) / pow(10, step - 2), step))
             number %= pow(10, step - 2)
