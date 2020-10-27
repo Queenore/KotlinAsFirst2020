@@ -15,121 +15,6 @@ import kotlin.math.sqrt
 
 fun isPrime(n: Int) = n >= 2 && (2..n / 2).all { n % it != 0 }
 
-fun digitConverter(n: Int, step: Int): String {
-    return when {
-        n == 1 && step == 1 -> "I"
-        n == 2 && step == 1 -> "II"
-        n == 3 && step == 1 -> "III"
-        n == 4 && step == 1 -> "IV"
-        n == 5 && step == 1 -> "V"
-        n == 6 && step == 1 -> "VI"
-        n == 7 && step == 1 -> "VII"
-        n == 8 && step == 1 -> "VIII"
-        n == 9 && step == 1 -> "IX"
-
-        n == 1 && step == 2 -> "X"
-        n == 2 && step == 2 -> "XX"
-        n == 3 && step == 2 -> "XXX"
-        n == 4 && step == 2 -> "XL"
-        n == 5 && step == 2 -> "L"
-        n == 6 && step == 2 -> "LX"
-        n == 7 && step == 2 -> "LXX"
-        n == 8 && step == 2 -> "LXXX"
-        n == 9 && step == 2 -> "XC"
-
-        n == 1 && step == 3 -> "C"
-        n == 2 && step == 3 -> "CC"
-        n == 3 && step == 3 -> "CCC"
-        n == 4 && step == 3 -> "CD"
-        n == 5 && step == 3 -> "D"
-        n == 6 && step == 3 -> "DC"
-        n == 7 && step == 3 -> "DCC"
-        n == 8 && step == 3 -> "DCCC"
-        n == 9 && step == 3 -> "CM"
-
-        n == 1 && step == 4 -> "M"
-        n == 2 && step == 4 -> "MM"
-        n == 3 && step == 4 -> "MMM"
-        else -> ""
-    }
-}
-
-fun digitInString(n: Int, step: Int): String {
-    return when {
-        n == 1 && step == 1 -> "один "
-        n == 2 && step == 1 -> "два "
-        n == 3 && step == 1 -> "три "
-        n == 4 && step == 1 -> "четыре "
-        n == 5 && step == 1 -> "пять "
-        n == 6 && step == 1 -> "шесть "
-        n == 7 && step == 1 -> "семь "
-        n == 8 && step == 1 -> "восемь "
-        n == 9 && step == 1 -> "девять "
-
-        n == 10 && step == 2 -> "десять "
-        n == 11 && step == 2 -> "одиннадцать "
-        n == 12 && step == 2 -> "двенадцать "
-        n == 13 && step == 2 -> "тринадцать "
-        n == 14 && step == 2 -> "четырнадцать "
-        n == 15 && step == 2 -> "пятнадцать "
-        n == 16 && step == 2 -> "шестнадцать "
-        n == 17 && step == 2 -> "семнадцать "
-        n == 18 && step == 2 -> "восемнадцать "
-        n == 19 && step == 2 -> "девятнадцать "
-
-        n == 2 && (step == 2 || step == 5) -> "двадцать "
-        n == 3 && (step == 2 || step == 5) -> "тридцать "
-        n == 4 && (step == 2 || step == 5) -> "сорок "
-        n == 5 && (step == 2 || step == 5) -> "пятьдесят "
-        n == 6 && (step == 2 || step == 5) -> "шестьдесят "
-        n == 7 && (step == 2 || step == 5) -> "семьдесят "
-        n == 8 && (step == 2 || step == 5) -> "восемьдесят "
-        n == 9 && (step == 2 || step == 5) -> "девяносто "
-
-        n == 1 && step == 3 -> "сто "
-        n == 2 && step == 3 -> "двести "
-        n == 3 && step == 3 -> "триста "
-        n == 4 && step == 3 -> "четыреста "
-        n == 5 && step == 3 -> "пятьсот "
-        n == 6 && step == 3 -> "шестьсот "
-        n == 7 && step == 3 -> "семьсот "
-        n == 8 && step == 3 -> "восемьсот "
-        n == 9 && step == 3 -> "девятьсот "
-
-        n == 1 && step == 4 -> "одна тысяча "
-        n == 2 && step == 4 -> "две тысячи "
-        n == 3 && step == 4 -> "три тысячи "
-        n == 4 && step == 4 -> "четыре тысячи "
-        n == 5 && step == 4 -> "пять тысяч "
-        n == 6 && step == 4 -> "шесть тысяч "
-        n == 7 && step == 4 -> "семь тысяч "
-        n == 8 && step == 4 -> "восемь тысяч "
-        n == 9 && step == 4 -> "девять тысяч "
-
-        n == 10 && step == 5 -> "десять тысяч "
-        n == 11 && step == 5 -> "одиннадцать тысяч "
-        n == 12 && step == 5 -> "двенадцать тысяч "
-        n == 13 && step == 5 -> "тринадцать тысячи "
-        n == 14 && step == 5 -> "четырнадцать тысяч "
-        n == 15 && step == 5 -> "пятнадцать тысяч "
-        n == 16 && step == 5 -> "шестнадцать тясяч "
-        n == 17 && step == 5 -> "семнадцать тысяч "
-        n == 18 && step == 5 -> "восемнадцать тысяч "
-        n == 19 && step == 5 -> "девятнадцать тысяч "
-
-        n == 1 && step == 6 -> "сто "
-        n == 2 && step == 6 -> "двести "
-        n == 3 && step == 6 -> "триста "
-        n == 4 && step == 6 -> "четыреста "
-        n == 5 && step == 6 -> "пятьсот "
-        n == 6 && step == 6 -> "шестьсот "
-        n == 7 && step == 6 -> "семьсот "
-        n == 8 && step == 6 -> "восемьсот "
-        n == 9 && step == 6 -> "девятьсот "
-        else -> ""
-    }
-}
-
 /**
  * Пример
  *
@@ -268,8 +153,8 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     if (list.isEmpty()) return list
-    val mean = list.sum()
-    for (i in 0 until list.size) list[i] -= mean / list.size
+    val mean = list.sum() / list.size
+    for (i in 0 until list.size) list[i] -= mean
     return list
 }
 
@@ -340,7 +225,7 @@ fun factorize(n: Int): List<Int> {
             nCpy /= i
             sum *= i
         }
-        if (nCpy % i != 0) i++
+        else if (nCpy % i != 0) i++
     }
     return list
 }
@@ -438,6 +323,46 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
+
+fun digitConverter(n: Int, step: Int): String {
+    return when {
+        n == 1 && step == 1 -> "I"
+        n == 2 && step == 1 -> "II"
+        n == 3 && step == 1 -> "III"
+        n == 4 && step == 1 -> "IV"
+        n == 5 && step == 1 -> "V"
+        n == 6 && step == 1 -> "VI"
+        n == 7 && step == 1 -> "VII"
+        n == 8 && step == 1 -> "VIII"
+        n == 9 && step == 1 -> "IX"
+
+        n == 1 && step == 2 -> "X"
+        n == 2 && step == 2 -> "XX"
+        n == 3 && step == 2 -> "XXX"
+        n == 4 && step == 2 -> "XL"
+        n == 5 && step == 2 -> "L"
+        n == 6 && step == 2 -> "LX"
+        n == 7 && step == 2 -> "LXX"
+        n == 8 && step == 2 -> "LXXX"
+        n == 9 && step == 2 -> "XC"
+
+        n == 1 && step == 3 -> "C"
+        n == 2 && step == 3 -> "CC"
+        n == 3 && step == 3 -> "CCC"
+        n == 4 && step == 3 -> "CD"
+        n == 5 && step == 3 -> "D"
+        n == 6 && step == 3 -> "DC"
+        n == 7 && step == 3 -> "DCC"
+        n == 8 && step == 3 -> "DCCC"
+        n == 9 && step == 3 -> "CM"
+
+        n == 1 && step == 4 -> "M"
+        n == 2 && step == 4 -> "MM"
+        n == 3 && step == 4 -> "MMM"
+        else -> ""
+    }
+}
+
 fun roman(n: Int): String {
     var number = n
     val result = StringBuilder()
@@ -456,14 +381,81 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun numberOfDigits(n: Int): Int {
-    var number = n
-    var result = 0
-    while (number > 0) {
-        result++
-        number /= 10
+
+fun digitInString(n: Int, step: Int): String {
+    return when {
+        n == 1 && step == 1 -> "один "
+        n == 2 && step == 1 -> "два "
+        n == 3 && step == 1 -> "три "
+        n == 4 && step == 1 -> "четыре "
+        n == 5 && step == 1 -> "пять "
+        n == 6 && step == 1 -> "шесть "
+        n == 7 && step == 1 -> "семь "
+        n == 8 && step == 1 -> "восемь "
+        n == 9 && step == 1 -> "девять "
+
+        n == 10 && step == 2 -> "десять "
+        n == 11 && step == 2 -> "одиннадцать "
+        n == 12 && step == 2 -> "двенадцать "
+        n == 13 && step == 2 -> "тринадцать "
+        n == 14 && step == 2 -> "четырнадцать "
+        n == 15 && step == 2 -> "пятнадцать "
+        n == 16 && step == 2 -> "шестнадцать "
+        n == 17 && step == 2 -> "семнадцать "
+        n == 18 && step == 2 -> "восемнадцать "
+        n == 19 && step == 2 -> "девятнадцать "
+
+        n == 2 && (step == 2 || step == 5) -> "двадцать "
+        n == 3 && (step == 2 || step == 5) -> "тридцать "
+        n == 4 && (step == 2 || step == 5) -> "сорок "
+        n == 5 && (step == 2 || step == 5) -> "пятьдесят "
+        n == 6 && (step == 2 || step == 5) -> "шестьдесят "
+        n == 7 && (step == 2 || step == 5) -> "семьдесят "
+        n == 8 && (step == 2 || step == 5) -> "восемьдесят "
+        n == 9 && (step == 2 || step == 5) -> "девяносто "
+
+        n == 1 && step == 3 -> "сто "
+        n == 2 && step == 3 -> "двести "
+        n == 3 && step == 3 -> "триста "
+        n == 4 && step == 3 -> "четыреста "
+        n == 5 && step == 3 -> "пятьсот "
+        n == 6 && step == 3 -> "шестьсот "
+        n == 7 && step == 3 -> "семьсот "
+        n == 8 && step == 3 -> "восемьсот "
+        n == 9 && step == 3 -> "девятьсот "
+
+        n == 1 && step == 4 -> "одна тысяча "
+        n == 2 && step == 4 -> "две тысячи "
+        n == 3 && step == 4 -> "три тысячи "
+        n == 4 && step == 4 -> "четыре тысячи "
+        n == 5 && step == 4 -> "пять тысяч "
+        n == 6 && step == 4 -> "шесть тысяч "
+        n == 7 && step == 4 -> "семь тысяч "
+        n == 8 && step == 4 -> "восемь тысяч "
+        n == 9 && step == 4 -> "девять тысяч "
+
+        n == 10 && step == 5 -> "десять тысяч "
+        n == 11 && step == 5 -> "одиннадцать тысяч "
+        n == 12 && step == 5 -> "двенадцать тысяч "
+        n == 13 && step == 5 -> "тринадцать тысяч "
+        n == 14 && step == 5 -> "четырнадцать тысяч "
+        n == 15 && step == 5 -> "пятнадцать тысяч "
+        n == 16 && step == 5 -> "шестнадцать тясяч "
+        n == 17 && step == 5 -> "семнадцать тысяч "
+        n == 18 && step == 5 -> "восемнадцать тысяч "
+        n == 19 && step == 5 -> "девятнадцать тысяч "
+
+        n == 1 && step == 6 -> "сто "
+        n == 2 && step == 6 -> "двести "
+        n == 3 && step == 6 -> "триста "
+        n == 4 && step == 6 -> "четыреста "
+        n == 5 && step == 6 -> "пятьсот "
+        n == 6 && step == 6 -> "шестьсот "
+        n == 7 && step == 6 -> "семьсот "
+        n == 8 && step == 6 -> "восемьсот "
+        n == 9 && step == 6 -> "девятьсот "
+        else -> ""
     }
-    return result
 }
 
 fun russian(n: Int): String {
@@ -471,12 +463,11 @@ fun russian(n: Int): String {
     var number = n
     var step = count(n)
     while (step > 0) {
-        if (step == 4 && numberOfDigits(number) < 4) {
+        if (step == 4 && count(number) < 4) {
             result.append("тысяч ")
-            step = numberOfDigits(number)
+            step = count(number)
         } else if ((step == 2 || step == 5) && number / pow(10, step - 1) == 1) {
             result.append(digitInString(10 + number % pow(10, step - 1) / pow(10, step - 2), step))
-            number %= pow(10, step - 1)
             number %= pow(10, step - 2)
             step -= 2
         } else if (number / pow(10, step - 1) != 0) {
