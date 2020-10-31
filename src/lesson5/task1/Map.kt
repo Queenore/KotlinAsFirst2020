@@ -236,7 +236,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
             min = value.second
         }
     }
-    if (min == 0.0) return null
+    if (count == 0) return null
     return result
 }
 
@@ -250,8 +250,13 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    for (i in word.indices)
-        if (!chars.contains(word[i])) return false
+    for (i in word.indices) {
+        if (word[i].isLowerCase() && !chars.contains(word[i])) {
+            if (!chars.contains(word[i].toUpperCase())) return false
+        } else if (word[i].isUpperCase() && !chars.contains(word[i])) {
+            if (!chars.contains(word[i].toLowerCase())) return false
+        }
+    }
     return true
 }
 
@@ -291,15 +296,14 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  */
 fun hasAnagrams(words: List<String>): Boolean {
     var count = 0
-    for (elem1 in words) {
-        for (elem2 in words) {
-            if (elem1 == elem2 && elem1 == "") return true
-            else if (elem1 == elem2 || elem1.length != elem2.length) break
+    for ((index1, elem1) in words.withIndex()) {
+        for ((index2, elem2) in words.withIndex()) {
+            if (index1 == index2) break
             for (i in elem2) {
                 if (elem1.contains(i)) count++
             }
             if (count == elem1.length) return true
-            count = 0
+            else count = 0
         }
     }
     return false
@@ -343,6 +347,7 @@ fun hasAnagrams(words: List<String>): Boolean {
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = mutableMapOf<String, MutableSet<String>>()
     val set = mutableSetOf<String>()
+    val temporarySet = mutableSetOf<String>()
     val map = mutableMapOf<String, Int>()
     var count = 0
     for ((key, value) in friends) {
@@ -368,7 +373,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
                             if (!value.contains(elem2) && elem2 != key) {
                                 if (!result.contains(key)) result[key] = mutableSetOf(elem2)
                                 else result[key]!!.add(elem2)
-                                if (!friends[elem2].isNullOrEmpty()) set.add(elem2)
+                                if (!friends[elem2].isNullOrEmpty()) temporarySet.add(elem2)
                                 if (!map.contains(elem2)) map[elem2] = 0
                             }
                         }
@@ -377,6 +382,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
                     if (value1 == 1) count++
                 if (count == map.size) break
                 else count = 0
+                set += temporarySet
             }
         set.clear()
         map.clear()

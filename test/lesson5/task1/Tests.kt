@@ -227,6 +227,13 @@ class Tests {
                 "печенье"
             )
         )
+        assertEquals(
+            "",
+            findCheapestStuff(
+                mapOf("" to ("" to 0.0)),
+                ""
+            )
+        )
     }
 
     @Test
@@ -235,6 +242,7 @@ class Tests {
         assertFalse(canBuildFrom(emptyList(), "foo"))
         assertTrue(canBuildFrom(listOf('a', 'b', 'o'), "baobab"))
         assertFalse(canBuildFrom(listOf('a', 'm', 'r'), "Marat"))
+        assertTrue(canBuildFrom(listOf('A'), "a"))
     }
 
     @Test
@@ -263,6 +271,7 @@ class Tests {
         assertFalse(hasAnagrams(listOf("поле", "полено")))
         assertTrue(hasAnagrams(listOf("лунь", "нуль")))
         assertTrue(hasAnagrams(listOf("", "")))
+        assertTrue(hasAnagrams(listOf("a", "a")))
     }
 
     @Test
@@ -336,6 +345,22 @@ class Tests {
                     "1" to setOf(),
                     "4" to setOf("0"),
                     "152" to setOf("2", "0", "3", "4", "1"),
+                )
+            )
+        )
+        assertEquals(
+            mapOf(
+                "0" to setOf("2", "4"),
+                "2" to setOf("4", "0"),
+                "3" to setOf("2", "0", "4"),
+                "4" to setOf("0", "2")
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "0" to setOf("2"),
+                    "2" to setOf("4"),
+                    "3" to setOf("2", "0"),
+                    "4" to setOf("0")
                 )
             )
         )
