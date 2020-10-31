@@ -262,6 +262,7 @@ class Tests {
         assertFalse(hasAnagrams(listOf("рот", "свет", "код", "дверь")))
         assertFalse(hasAnagrams(listOf("поле", "полено")))
         assertTrue(hasAnagrams(listOf("лунь", "нуль")))
+        assertTrue(hasAnagrams(listOf("", "")))
     }
 
     @Test
@@ -287,7 +288,7 @@ class Tests {
                 "Mikhail" to setOf("Sveta", "Marat"),
                 "Friend" to setOf("GoodGnome"),
                 "EvilGnome" to setOf(),
-                "GoodGnome" to setOf()
+                "GoodGnome" to setOf(),
             ),
             propagateHandshakes(
                 mapOf(
@@ -295,7 +296,46 @@ class Tests {
                     "Sveta" to setOf("Marat"),
                     "Mikhail" to setOf("Sveta"),
                     "Friend" to setOf("GoodGnome"),
-                    "EvilGnome" to setOf()
+                    "EvilGnome" to setOf(),
+                )
+            )
+        )
+        assertEquals(
+            mapOf(
+                "2" to setOf("3", "4", "5", "6", "7"),
+                "3" to setOf("4", "5", "6", "7"),
+                "4" to setOf("5", "6", "7"),
+                "5" to setOf("6", "7"),
+                "6" to setOf("7"),
+                "7" to setOf()
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "2" to setOf("3"),
+                    "3" to setOf("4"),
+                    "4" to setOf("5"),
+                    "5" to setOf("6"),
+                    "6" to setOf("7"),
+                )
+            )
+        )
+        assertEquals(
+            mapOf(
+                "2" to setOf(),
+                "3" to setOf(),
+                "0" to setOf("152", "2", "3", "4", "1"),
+                "1" to setOf(),
+                "4" to setOf("0", "152", "2", "3", "1"),
+                "152" to setOf("2", "0", "3", "4", "1"),
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "2" to setOf(),
+                    "3" to setOf(),
+                    "0" to setOf("152", "2"),
+                    "1" to setOf(),
+                    "4" to setOf("0"),
+                    "152" to setOf("2", "0", "3", "4", "1"),
                 )
             )
         )

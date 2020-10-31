@@ -293,7 +293,8 @@ fun hasAnagrams(words: List<String>): Boolean {
     var count = 0
     for (elem1 in words) {
         for (elem2 in words) {
-            if (elem1 == elem2 || elem1.length != elem2.length) break
+            if (elem1 == elem2 && elem1 == "") return true
+            else if (elem1 == elem2 || elem1.length != elem2.length) break
             for (i in elem2) {
                 if (elem1.contains(i)) count++
             }
@@ -338,10 +339,11 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "GoodGnome" to setOf()
  *        )
  */
+
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = mutableMapOf<String, MutableSet<String>>()
-    var person: String
-    var set: MutableSet<String>
+    val set = mutableSetOf<String>()
+    val map = mutableMapOf<String, Int>()
     var count = 0
     for ((key, value) in friends) {
         for (elem in value) {
@@ -354,26 +356,31 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         for (elem in value)
             if (!result.contains(elem)) result[elem] = mutableSetOf()
     for ((key, value) in friends) {
+        for (element in value)
+            if (!friends[element].isNullOrEmpty()) set.add(element)
         if (!value.isNullOrEmpty())
-            for (elem in value) {
-                person = elem
-                set = mutableSetOf(key)
-                while (true) {
-                    if (!friends[person].isNullOrEmpty())
-                        for (elem2 in friends[person] ?: error(""))
+            while (true) {
+                for (elem in set) {
+                    map[elem] = 1
+                    if (!friends[elem].isNullOrEmpty())
+                        for (elem2 in friends[elem] ?: error("")) {
+                            if (map[elem2] == 0) map[elem2] = 1
                             if (!value.contains(elem2) && elem2 != key) {
                                 if (!result.contains(key)) result[key] = mutableSetOf(elem2)
                                 else result[key]!!.add(elem2)
-                                if (!friends.contains(person) || set.contains(person)) count++
-                                set.add(person)
-                                person = elem2
-                            } else count++
-                    else break
-                    if (count > 0) break
+                                if (!friends[elem2].isNullOrEmpty()) set.add(elem2)
+                                if (!map.contains(elem2)) map[elem2] = 0
+                            }
+                        }
                 }
-                count = 0
-                set.clear()
+                for ((_, value1) in map)
+                    if (value1 == 1) count++
+                if (count == map.size) break
+                else count = 0
             }
+        set.clear()
+        map.clear()
+        count = 0
     }
     return result
 }
