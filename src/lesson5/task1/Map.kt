@@ -253,11 +253,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     if (word == "") return true
     else if (chars.isEmpty()) return false
     for (i in word.indices) {
-        if (word[i].isLowerCase() && !chars.contains(word[i])) {
-            if (!chars.contains(word[i].toUpperCase())) return false
-        } else if (word[i].isUpperCase() && !chars.contains(word[i])) {
-            if (!chars.contains(word[i].toLowerCase())) return false
-        }
+        if (word[i] in 'a'..'z' || word[i] in 'A'..'Z') {
+            if (word[i].isLowerCase() && !chars.contains(word[i])) {
+                if (!chars.contains(word[i].toUpperCase())) return false
+            } else if (word[i].isUpperCase() && !chars.contains(word[i])) {
+                if (!chars.contains(word[i].toLowerCase())) return false
+            }
+        } else return false
     }
     return true
 }
