@@ -259,7 +259,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
             } else if (word[i].isUpperCase() && !chars.contains(word[i])) {
                 if (!chars.contains(word[i].toLowerCase())) return false
             }
-        } else return false
+        } else if (chars.contains(word[i])) continue
+        else return false
     }
     return true
 }
