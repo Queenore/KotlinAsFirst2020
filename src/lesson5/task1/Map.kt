@@ -351,14 +351,8 @@ fun hasAnagrams(words: List<String>): Boolean {
  *          "GoodGnome" to setOf()
  *        )
  */
-
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+fun init(friends: Map<String, Set<String>>): MutableMap<String, MutableSet<String>> {
     val result = mutableMapOf<String, MutableSet<String>>()
-    val map = mutableMapOf<String, Int>()
-    val set = mutableSetOf<String>()
-    val temporarySet = mutableSetOf<String>()
-    val thisStepSet = mutableSetOf<String>() // to map doesn't increase by 1 when it's not needed
-    var count = 0
     for ((key, value) in friends) {
         for (elem in value) {
             if (!result.contains(key)) result[key] = mutableSetOf(elem)
@@ -369,6 +363,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((_, value) in friends)
         for (elem in value)
             if (!result.contains(elem)) result[elem] = mutableSetOf()
+    return result
+}
+
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val result = init(friends)
+    val map = mutableMapOf<String, Int>()
+    val set = mutableSetOf<String>()
+    val temporarySet = mutableSetOf<String>()
+    val thisStepSet = mutableSetOf<String>() // to map doesn't increase by 1 when it's not needed
+    var count = 0
     for ((key, value) in friends) {
         for (element in value)
             if (!friends[element].isNullOrEmpty()) set.add(element)
@@ -458,4 +462,20 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val result = mutableSetOf<String>()
+    var cost = 0
+    for ((key, value) in treasures) {
+        if (cost == 0 && value.first <= capacity) {
+            cost = value.first * value.second
+            result.add(key)
+        } else if (value.first * value.second == cost)
+            result.add(key)
+        else if (value.first * value.second > cost && value.first <= capacity) {
+            cost = value.first * value.second
+            result.clear()
+            result.add(key)
+        }
+    }
+    return result
+}
