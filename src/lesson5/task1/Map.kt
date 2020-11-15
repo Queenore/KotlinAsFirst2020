@@ -140,7 +140,7 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  */
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMap<String, String> {
     for ((key) in b)
-        if (a.contains(key) && a[key] == b[key]) a.remove(key)
+        if (a[key] == b[key]) a.remove(key)
     return a
 }
 
@@ -201,10 +201,8 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
     val result = mutableMapOf<String, Double>()
     val count = mutableMapOf<String, Double>()
     for ((key, value) in stockPrices) {
-        if (!result.contains(key)) result[key] = value
-        else result[key] = result[key]!! + value
-        if (!count.contains(key)) count[key] = 1.0
-        else count[key] = count[key]!! + 1.0
+        result[key] = result.getOrDefault(key, 0.0) + value
+        count[key] = count.getOrDefault(key, 0.0) + 1.0
     }
     for ((key) in result) result[key] = result[key]!! / count[key]!!
     return result
@@ -255,16 +253,13 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     if (word == "") return true
     else if (chars.isEmpty()) return false
-    for (i in word.indices) {
-        if (word[i] in 'a'..'z' || word[i] in 'A'..'Z') {
-            if (word[i].isLowerCase() && !chars.contains(word[i])) {
-                if (!chars.contains(word[i].toUpperCase())) return false
-            } else if (word[i].isUpperCase() && !chars.contains(word[i])) {
-                if (!chars.contains(word[i].toLowerCase())) return false
-            }
-        } else if (chars.contains(word[i])) continue
-        else return false
+    val set = mutableSetOf<Char>()
+    chars.forEach {
+        set.add(it.toUpperCase())
+        set.add(it.toLowerCase())
     }
+    for (element in word)
+        if (!set.contains(element)) return false
     return true
 }
 
@@ -283,10 +278,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
 fun extractRepeats(list: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
     for (elem in list)
-        if (!result.contains(elem)) result[elem] = 1
-        else result[elem] = result[elem]!!.plus(1)
-    for (elem in list)
-        if (result[elem] == 1) result.remove(elem)
+        result[elem] = result.getOrDefault(elem, 0) + 1
+    list.forEach { if (result[it] == 1) result.remove(it) }
     return result
 }
 
@@ -303,17 +296,11 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    var count = 0
-    for ((index1, elem1) in words.withIndex()) {
-        for ((index2, elem2) in words.withIndex()) {
-            if (index1 == index2) break
-            for (i in elem2) {
-                if (elem1.contains(i)) count++
-            }
-            if (count == elem1.length) return true
-            else count = 0
-        }
+    val set = mutableSetOf<String>()
+    for (elem in words) {
+        set.add(elem.toSortedSet().toString())
     }
+    if (words.size != set.size) return true
     return false
 }
 
@@ -385,8 +372,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
                             if (!thisStepSet.contains(elem2)) {
                                 if (map[elem2] == 0) map[elem2] = 1
                                 if (!result[key]!!.contains(elem2) && elem2 != key) {
-                                    if (!result.contains(key)) result[key] = mutableSetOf(elem2)
-                                    else result[key]!!.add(elem2)
+                                    result.getOrPut(key) { mutableSetOf() }.add(elem2)
                                     if (!map.contains(elem2)) map[elem2] = 0
                                     temporarySet.add(elem2)
                                     thisStepSet.add(elem2)
@@ -430,14 +416,12 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var digit1 = -1
     var digit2 = -1
-    for ((index, elem) in list.withIndex())
-        for ((index1, elem1) in list.withIndex()) {
-            if (index == index1) break
-            if (elem + elem1 == number) {
-                digit1 = min(index, index1)
-                digit2 = max(index, index1)
-            }
+    for (elem in list) {
+        if (list.contains(number - elem) && list.indexOf(elem) != list.indexOf(number - elem)) {
+            digit1 = min(list.indexOf(elem), list.indexOf(number - elem))
+            digit2 = max(list.indexOf(elem), list.indexOf(number - elem))
         }
+    }
     return Pair(digit1, digit2)
 }
 
@@ -462,20 +446,4 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    val result = mutableSetOf<String>()
-    var cost = 0
-    for ((key, value) in treasures) {
-        if (cost == 0 && value.first <= capacity) {
-            cost = value.first * value.second
-            result.add(key)
-        } else if (value.first * value.second == cost)
-            result.add(key)
-        else if (value.first * value.second > cost && value.first <= capacity) {
-            cost = value.first * value.second
-            result.clear()
-            result.add(key)
-        }
-    }
-    return result
-}
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
