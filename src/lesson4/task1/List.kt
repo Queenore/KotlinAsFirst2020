@@ -323,41 +323,17 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 
-fun digitConverter(n: Int, step: Int): String {
-    return when {
-        n == 1 && step == 1 -> "I"
-        n == 2 && step == 1 -> "II"
-        n == 3 && step == 1 -> "III"
-        n == 4 && step == 1 -> "IV"
-        n == 5 && step == 1 -> "V"
-        n == 6 && step == 1 -> "VI"
-        n == 7 && step == 1 -> "VII"
-        n == 8 && step == 1 -> "VIII"
-        n == 9 && step == 1 -> "IX"
-
-        n == 1 && step == 2 -> "X"
-        n == 2 && step == 2 -> "XX"
-        n == 3 && step == 2 -> "XXX"
-        n == 4 && step == 2 -> "XL"
-        n == 5 && step == 2 -> "L"
-        n == 6 && step == 2 -> "LX"
-        n == 7 && step == 2 -> "LXX"
-        n == 8 && step == 2 -> "LXXX"
-        n == 9 && step == 2 -> "XC"
-
-        n == 1 && step == 3 -> "C"
-        n == 2 && step == 3 -> "CC"
-        n == 3 && step == 3 -> "CCC"
-        n == 4 && step == 3 -> "CD"
-        n == 5 && step == 3 -> "D"
-        n == 6 && step == 3 -> "DC"
-        n == 7 && step == 3 -> "DCC"
-        n == 8 && step == 3 -> "DCCC"
-        n == 9 && step == 3 -> "CM"
-
-        n == 1 && step == 4 -> "M"
-        n == 2 && step == 4 -> "MM"
-        n == 3 && step == 4 -> "MMM"
+fun digitConverter(n: Int, first: String, second: String, third: String): String {
+    return when (n) {
+        1 -> first
+        2 -> first + first
+        3 -> first + first + first
+        4 -> first + second
+        5 -> second
+        6 -> second + first
+        7 -> second + first + first
+        8 -> second + first + first + first
+        9 -> first + third
         else -> ""
     }
 }
@@ -365,9 +341,30 @@ fun digitConverter(n: Int, step: Int): String {
 fun roman(n: Int): String {
     var number = n
     val result = StringBuilder()
+    var first = ""
+    var second = ""
+    var third = ""
     for (step in digitNumber(n) downTo 1) {
+        when (step) {
+            4 -> first = "M"
+            3 -> {
+                first = "C"
+                second = "D"
+                third = "M"
+            }
+            2 -> {
+                first = "X"
+                second = "L"
+                third = "C"
+            }
+            1 -> {
+                first = "I"
+                second = "V"
+                third = "X"
+            }
+        }
         if (number / pow(10, step - 1) != 0)
-            result.append(digitConverter(number / pow(10, step - 1), step))
+            result.append(digitConverter(number / pow(10, step - 1), first, second, third))
         number %= pow(10, step - 1)
     }
     return result.toString()

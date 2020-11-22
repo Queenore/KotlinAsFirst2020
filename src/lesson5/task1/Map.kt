@@ -342,8 +342,7 @@ fun init(friends: Map<String, Set<String>>): MutableMap<String, MutableSet<Strin
     val result = mutableMapOf<String, MutableSet<String>>()
     for ((key, value) in friends) {
         for (elem in value) {
-            if (!result.contains(key)) result[key] = mutableSetOf(elem)
-            else result[key]!!.add(elem)
+            result.getOrPut(key) { mutableSetOf() }.add(elem)
         }
         if (value.isNullOrEmpty()) result[key] = mutableSetOf()
     }
@@ -356,40 +355,38 @@ fun init(friends: Map<String, Set<String>>): MutableMap<String, MutableSet<Strin
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = init(friends)
     val map = mutableMapOf<String, Int>()
-    val set = mutableSetOf<String>()
-    val temporarySet = mutableSetOf<String>()
-    val thisStepSet = mutableSetOf<String>() // to map doesn't increase by 1 when it's not needed
-    var count = 0
+    val handshakeFriends = mutableSetOf<String>()
+    val handshakesForKey = mutableSetOf<String>()
+    val handshakesForElem = mutableSetOf<String>() // to map doesn't increase by 1 when it's not needed
+    var count: Int
     for ((key, value) in friends) {
         for (element in value)
-            if (!friends[element].isNullOrEmpty()) set.add(element)
+            if (!friends[element].isNullOrEmpty()) handshakeFriends.add(element)
         if (!value.isNullOrEmpty()) {
             while (true) {
-                for (elem in set) {
+                for (elem in handshakeFriends) {
                     map[elem] = 1
-                    if (!friends[elem].isNullOrEmpty())
-                        for (elem2 in friends[elem] ?: error("")) {
-                            if (!thisStepSet.contains(elem2)) {
-                                if (map[elem2] == 0) map[elem2] = 1
-                                if (!result[key]!!.contains(elem2) && elem2 != key) {
-                                    result.getOrPut(key) { mutableSetOf() }.add(elem2)
-                                    if (!map.contains(elem2)) map[elem2] = 0
-                                    temporarySet.add(elem2)
-                                    thisStepSet.add(elem2)
-                                }
+                    for (friend in friends[elem].orEmpty()) {
+                        if (!handshakesForElem.contains(friend)) {
+                            if (map[friend] == 0) map[friend] = 1
+                            if (!result[key]!!.contains(friend) && friend != key) {
+                                result.getOrPut(key) { mutableSetOf() }.add(friend)
+                                if (!map.contains(friend)) map[friend] = 0
+                                handshakesForKey.add(friend)
+                                handshakesForElem.add(friend)
                             }
                         }
+                    }
                 }
+                count = 0
                 for ((_, value1) in map)
                     if (value1 == 1) count++
                 if (count == map.size) break
-                else count = 0
-                set += temporarySet
-                thisStepSet.clear()
+                handshakeFriends += handshakesForKey
+                handshakesForElem.clear()
             }
-            count = 0
-            temporarySet.clear()
-            set.clear()
+            handshakesForKey.clear()
+            handshakeFriends.clear()
             map.clear()
         }
     }
@@ -414,15 +411,20 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    var digit1 = -1
-    var digit2 = -1
-    for (elem in list) {
-        if (list.contains(number - elem) && list.indexOf(elem) != list.indexOf(number - elem)) {
-            digit1 = min(list.indexOf(elem), list.indexOf(number - elem))
-            digit2 = max(list.indexOf(elem), list.indexOf(number - elem))
-        }
+    val map = hashMapOf<Int, Pair<Pair<Int, Int>, Int>>()
+    for ((index, elem) in list.withIndex()) {
+        if (map[elem] == null) map[elem] = Pair(Pair(index, 0), 1)
+        else map[elem] = Pair(Pair(map[elem]!!.first.first, index), map[elem]!!.second + 1)
     }
-    return Pair(digit1, digit2)
+    for ((key, value) in map) {
+        if (value.second >= 2)
+            return (Pair(map[key]!!.first.first, map[key]!!.first.second))
+        else if (map.contains(number - key) && map[key].hashCode() != map[number - key].hashCode()) return Pair(
+            min(value.first.first, map[number - key]!!.first.first),
+            max(value.first.first, map[number - key]!!.first.first)
+        )
+    }
+    return Pair(-1, -1)
 }
 
 /**
