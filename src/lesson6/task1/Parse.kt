@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import java.lang.IllegalArgumentException
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -16,11 +18,15 @@ package lesson6.task1
 fun timeStrToSeconds(str: String): Int {
     val parts = str.split(":")
     var result = 0
-    for (part in parts) {
-        val number = part.toInt()
-        result = result * 60 + number
+    return try {
+        for (part in parts) {
+            val number = part.toInt()
+            result = result * 60 + number
+        }
+        result
+    } catch (e: NumberFormatException) {
+        -1
     }
-    return result
 }
 
 /**
@@ -138,7 +144,19 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val list = expression.split(' ').filter { it != "" }
+    var result = list[0].toInt()
+    for ((index, element) in list.withIndex()) {
+        for (symbol in element)
+            if ((symbol == '+' || symbol == '-') && index % 2 == 0) throw IllegalArgumentException()
+        if (index % 2 == 0 && (element == "+" || element == "-")) throw IllegalArgumentException()
+        else if (index % 2 == 1 || index == 0) continue
+        else if (list[index - 1] == "+") result += element.toInt()
+        else if (list[index - 1] == "-") result -= element.toInt()
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
