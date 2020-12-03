@@ -133,7 +133,22 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    if (!jumps.matches(Regex("""(\d+.[+\-\%]+.)*(\d+.[+\-\%]+)"""))) return -1
+    val list = jumps.split(' ')
+    var result = 0
+    var currentNumber = 0
+    var count = 0
+    for (element in list) {
+        for (symbol in element)
+            if (symbol != '-' && symbol != '+' && symbol != '%')
+                count++
+        if (count == element.length) currentNumber = element.toInt()
+        else if (element == "+" && currentNumber > result) result = currentNumber
+        count = 0
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -145,13 +160,11 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    val list = expression.split(' ').filter { it != "" }
+    if (!expression.matches(Regex("""(\d|.[+-].)*(\d+)"""))) throw IllegalArgumentException()
+    val list = expression.split(' ')
     var result = list[0].toInt()
     for ((index, element) in list.withIndex()) {
-        for (symbol in element)
-            if ((symbol == '+' || symbol == '-') && index % 2 == 0) throw IllegalArgumentException()
-        if (index % 2 == 0 && (element == "+" || element == "-")) throw IllegalArgumentException()
-        else if (index % 2 == 1 || index == 0) continue
+        if (index % 2 == 1 || index == 0) continue
         else if (list[index - 1] == "+") result += element.toInt()
         else if (list[index - 1] == "-") result -= element.toInt()
     }
