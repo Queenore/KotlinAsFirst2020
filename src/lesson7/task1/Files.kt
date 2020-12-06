@@ -87,9 +87,9 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
             stringCpy = string
             var count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
             while (count.isNotEmpty()) {
-                k = stringCpy[count[0].range.first]
+                k = stringCpy[count[0].range.first].toLowerCase()
                 stringCpy = stringCpy.replaceRange(count[0].range.first..count[0].range.first, "")
-                if (count[0].range.first == 0 || k != stringCpy[count[0].range.first - 1])
+                if (count[0].range.first == 0 || k != stringCpy[count[0].range.first - 1].toLowerCase())
                     result[word] = result.getOrDefault(word, 0) + 1
                 count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
             }
