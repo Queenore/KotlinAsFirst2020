@@ -78,6 +78,7 @@ fun deleteMarked(inputName: String, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
     var stringCpy: String
+    var k: Char
     for (string in substrings)
         result[string] = 0
     for (word in substrings.toSet()) {
@@ -86,8 +87,10 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
             stringCpy = string
             var count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
             while (count.isNotEmpty()) {
+                k = stringCpy[count[0].range.first]
                 stringCpy = stringCpy.replaceRange(count[0].range.first..count[0].range.first, "")
-                result[word] = result.getOrDefault(word, 0) + 1
+                if (count[0].range.first == 0 || k != stringCpy[count[0].range.first - 1])
+                    result[word] = result.getOrDefault(word, 0) + 1
                 count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
             }
         }
