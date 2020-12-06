@@ -80,7 +80,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     var stringCpy: String
     for (string in substrings)
         result[string] = 0
-    for (word in substrings) {
+    for (word in substrings.toSet()) {
         val reader = File(inputName).bufferedReader()
         for (string in reader.readLines()) {
             stringCpy = string
