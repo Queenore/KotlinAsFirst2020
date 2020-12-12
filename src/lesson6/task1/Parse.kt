@@ -134,20 +134,13 @@ fun bestLongJump(jumps: String): Int = TODO()
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+.[+\-\%]+.)*(\d+.[+\-\%]+)"""))) return -1
+    if (!jumps.matches(Regex("""(\d+\s[+\-%]+\s)*(\d+\s[+\-%]+)"""))) return -1
     val list = jumps.split(' ')
     var result = 0
-    var currentNumber = 0
-    var count = 0
-    for (element in list) {
-        for (symbol in element)
-            if (symbol != '-' && symbol != '+' && symbol != '%')
-                count++
-        if (count == element.length) currentNumber = element.toInt()
-        else if (element == "+" && currentNumber > result) result = currentNumber
-        count = 0
-    }
-    return result
+    for ((index, element) in list.withIndex())
+        if (index % 2 == 1 && element.matches(Regex("""[+]""")) && list[index - 1].toInt() > result)
+            result = list[index - 1].toInt()
+    return if (result == 0) -1 else result
 }
 
 /**
@@ -160,13 +153,13 @@ fun bestHighJump(jumps: String): Int {
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
 fun plusMinus(expression: String): Int {
-    if (!expression.matches(Regex("""(\d|.[+-].)*(\d+)"""))) throw IllegalArgumentException()
+    if (!expression.matches(Regex("""(\d+\s[+-]\s)*(\d+)"""))) throw IllegalArgumentException()
     val list = expression.split(' ')
     var result = list[0].toInt()
     for ((index, element) in list.withIndex()) {
         if (index % 2 == 1 || index == 0) continue
         else if (list[index - 1] == "+") result += element.toInt()
-        else if (list[index - 1] == "-") result -= element.toInt()
+        else result -= element.toInt()
     }
     return result
 }

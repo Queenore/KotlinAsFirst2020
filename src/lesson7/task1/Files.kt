@@ -1,7 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
 package lesson7.task1
-
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -78,23 +77,23 @@ fun deleteMarked(inputName: String, outputName: String) {
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
     var stringCpy: String
-    var k: Char
+    var char: Char
     for (string in substrings)
         result[string] = 0
     for (word in substrings.toSet()) {
-        val reader = File(inputName).bufferedReader()
-        for (string in reader.readLines()) {
-            stringCpy = string
-            var count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
-            while (count.isNotEmpty()) {
-                k = stringCpy[count[0].range.first].toLowerCase()
-                stringCpy = stringCpy.replaceRange(count[0].range.first..count[0].range.first, "")
-                if (count[0].range.first == 0 || k != stringCpy[count[0].range.first - 1].toLowerCase())
-                    result[word] = result.getOrDefault(word, 0) + 1
-                count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
+        File(inputName).bufferedReader().use { reader ->
+            for (string in reader.readLines()) {
+                stringCpy = string
+                var count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
+                while (count.isNotEmpty()) {
+                    char = stringCpy[count[0].range.first].toLowerCase()
+                    stringCpy = stringCpy.replaceRange(count[0].range.first..count[0].range.first, "")
+                    if (count[0].range.first == 0 || char != stringCpy[count[0].range.first - 1].toLowerCase())
+                        result[word] = result.getOrDefault(word, 0) + 1
+                    count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
+                }
             }
         }
-        reader.close()
     }
     return result
 }
