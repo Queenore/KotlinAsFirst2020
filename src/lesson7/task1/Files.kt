@@ -461,14 +461,12 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     File(outputName).bufferedWriter().use { out ->
         var whiteSpace = ""
         var secondStringWhiteSpace = ""
-        var lastStringWhiteSpace = ""
         var dash = ""
-        val firstStringLength = digitNumber(rhv) + digitNumber(lhv)
+        val firstStringLength = 1 + digitNumber(rhv * lhv)
 
-        for (i in 1..digitNumber(rhv)) whiteSpace += " "
+        for (i in 1..firstStringLength - digitNumber(lhv)) whiteSpace += " "
         for (i in 1 until firstStringLength - digitNumber(rhv)) secondStringWhiteSpace += " "
         for (i in 1..firstStringLength) dash += "-"
-        for (i in 1..firstStringLength - digitNumber(lhv * rhv)) lastStringWhiteSpace += " "
 
         out.write("$whiteSpace$lhv\n*$secondStringWhiteSpace$rhv\n$dash\n")
         whiteSpace = ""
@@ -481,7 +479,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             out.write("+$whiteSpace${takeDigit(rhv, i + 1) * lhv}\n")
         }
 
-        out.write("$dash\n$lastStringWhiteSpace${lhv * rhv}")
+        out.write("$dash\n ${lhv * rhv}")
     }
 }
 
