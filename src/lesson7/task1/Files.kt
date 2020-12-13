@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
 package lesson7.task1
+
+import lesson3.task1.digitNumber
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -443,8 +445,44 @@ fun markdownToHtml(inputName: String, outputName: String) {
 2350
  *
  */
+fun takeDigit(number: Int, position: Int): Int {
+    var result = 0
+    var i = 0
+    var numberCpy = number
+    while (i != position) {
+        i++
+        result = numberCpy % 10
+        numberCpy /= 10
+    }
+    return result
+}
+
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    File(outputName).bufferedWriter().use { out ->
+        var whiteSpace = ""
+        var secondStringWhiteSpace = ""
+        var lastStringWhiteSpace = ""
+        var dash = ""
+        val firstStringLength = digitNumber(rhv) + digitNumber(lhv)
+
+        for (i in 1..digitNumber(rhv)) whiteSpace += " "
+        for (i in 1 until firstStringLength - digitNumber(rhv)) secondStringWhiteSpace += " "
+        for (i in 1..firstStringLength) dash += "-"
+        for (i in 1..firstStringLength - digitNumber(lhv * rhv)) lastStringWhiteSpace += " "
+
+        out.write("$whiteSpace$lhv\n*$secondStringWhiteSpace$rhv\n$dash\n")
+        whiteSpace = ""
+        for (i in 1..firstStringLength - digitNumber(takeDigit(rhv, 1) * lhv)) whiteSpace += " "
+        out.write("$whiteSpace${takeDigit(rhv, 1) * lhv}\n")
+
+        for (i in 1 until digitNumber(rhv)) {
+            whiteSpace = ""
+            for (j in 1 until firstStringLength - digitNumber(takeDigit(rhv, i + 1) * lhv) - i) whiteSpace += " "
+            out.write("+$whiteSpace${takeDigit(rhv, i + 1) * lhv}\n")
+        }
+
+        out.write("$dash\n$lastStringWhiteSpace${lhv * rhv}")
+    }
 }
 
 
