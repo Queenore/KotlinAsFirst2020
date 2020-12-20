@@ -597,11 +597,19 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 whiteSpaceForSubtrahend.append(whiteSpaceForNewNumber.substring(1 until whiteSpaceForNewNumber.length))
             } else for (j in 1 until digitNumber(newNumber) - digitNumber(subtrahend)) whiteSpaceForSubtrahend.append(" ")
             dash.clear()
-            for (j in 0..digitNumber(subtrahend)) dash.append("-")
+            if (digitNumber(subtrahend) + 1 >= digitNumber(remains))
+                for (j in 0..digitNumber(subtrahend)) dash.append("-")
+            else for (j in 0..digitNumber(remains)) dash.append("-")
 
-            if (remains == 0)
-                out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
-            else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+            if (digitNumber(subtrahend) + 1 >= digitNumber(remains)) {
+                if (remains == 0)
+                    out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+                else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+            } else {
+                if (remains == 0)
+                    out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForNewNumber$dash\n")
+                else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForNewNumber$dash\n")
+            }
 
             remainsCpy = remains
         }
@@ -615,8 +623,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
         for (i in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
         if (remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
-        dash.clear()
-        for (i in 0..digitNumber(subtrahend)) dash.append("-")
 
         out.write("$whiteSpaceForNewNumber$remains")
     }
