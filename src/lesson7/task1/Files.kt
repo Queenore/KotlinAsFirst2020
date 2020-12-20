@@ -552,7 +552,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         val secondStringWhiteSpace = StringBuilder()
         val dash = StringBuilder()
         val whiteSpaceForSubtrahend = StringBuilder()
-        val whiteSpaceforNewNumber = StringBuilder(" ")
+        val whiteSpaceForNewNumber = StringBuilder(" ")
         var remains = 0
         var newNumber = 0
         var residualNumber = 0
@@ -576,31 +576,34 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                         digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv))
                     ) - lhv
                 )
-                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceforNewNumber.append(" ")
+                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
             } else {
                 remains = newNumber - subtrahend
-                residualNumber = revert(revert(residualNumber) / 10)
+                residualNumber %= pow(10, digitNumber(residualNumber) - 1)
             }
 
+            if (remainsCpy != remains && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
             newNumber = newNumber(remains, takeDigit(residualNumber, digitNumber(residualNumber)))
             if (i != 1) {
-                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceforNewNumber.append(" ")
-                if (remains == 0) whiteSpaceforNewNumber.append(" ")
+                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
+                if (remains == 0 && newNumber != 0) whiteSpaceForNewNumber.append(" ")
             }
             subtrahend = subtrahend(rhv, newNumber)
 
             whiteSpaceForSubtrahend.clear()
-            whiteSpaceForSubtrahend.append(whiteSpaceforNewNumber)
+            whiteSpaceForSubtrahend.append(whiteSpaceForNewNumber)
             if (digitNumber(newNumber) == digitNumber(subtrahend) && remains != 0) {
                 whiteSpaceForSubtrahend.clear()
-                whiteSpaceForSubtrahend.append(whiteSpaceforNewNumber.substring(1 until whiteSpaceforNewNumber.length))
+                whiteSpaceForSubtrahend.append(whiteSpaceForNewNumber.substring(1 until whiteSpaceForNewNumber.length))
             } else for (j in 1 until digitNumber(newNumber) - digitNumber(subtrahend)) whiteSpaceForSubtrahend.append(" ")
             dash.clear()
             for (j in 0..digitNumber(subtrahend)) dash.append("-")
 
             if (remains == 0)
-                out.write("${whiteSpaceforNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
-            else out.write("${whiteSpaceforNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+                out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+            else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+
+            remainsCpy = remains
         }
 
         if (digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv)) >= 1) {
@@ -610,12 +613,12 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             remains = newNumber - subtrahend
         } else remains = lhv - subtrahend
 
-        for (i in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceforNewNumber.append(" ")
-        if (remainsCpy == 0) whiteSpaceforNewNumber.append(" ")
+        for (i in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
+        if (remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
         dash.clear()
         for (i in 0..digitNumber(subtrahend)) dash.append("-")
 
-        out.write("$whiteSpaceforNewNumber$remains")
+        out.write("$whiteSpaceForNewNumber$remains")
     }
 }
 
