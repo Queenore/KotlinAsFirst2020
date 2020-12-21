@@ -561,6 +561,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var residualNumber = 0
         var currentNumberOfDigit = 0
         var remainsCpy = -1
+        var numberOfZero = 0
+        var flag = 1
         val firstStringLength = 4 + digitNumber(lhv) + digitNumber(rhv)
 
         for (i in 1..firstStringLength - 1 - digitNumber(rhv) - digitNumber(currentNumber(lhv, rhv)))
@@ -580,15 +582,23 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                         digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv))
                     ) - lhv
                 )
+                if (digitNumber(residualNumber) + currentNumber(lhv, rhv) != lhv)
+                    numberOfZero = digitNumber(lhv) - digitNumber(residualNumber) - digitNumber(currentNumber(lhv, rhv))
                 for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
                 currentNumberOfDigit = digitNumber(residualNumber)
             } else {
                 remains = newNumber - subtrahend
-                currentNumberOfDigit--
+                if (numberOfZero == 0 && flag < 1) currentNumberOfDigit--
             }
 
             if (remainsCpy != remains && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
-            newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
+            if (numberOfZero > 0) {
+                newNumber = newNumber(remains, 0)
+                numberOfZero--
+            } else {
+                newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
+                flag--
+            }
             if (i != 1) {
                 for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
                 if (remains == 0 && remainsCpy == 0 && newNumber != 0)
