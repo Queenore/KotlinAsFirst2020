@@ -591,9 +591,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
             if (i != 1) {
                 for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
-                if (remains == 0 && newNumber != 0) whiteSpaceForNewNumber.append(" ")
+                if (remains == 0 && remainsCpy == 0 && newNumber != 0)
+                    whiteSpaceForNewNumber.append(" ")
             }
-            if (remainsCpy == newNumber) whiteSpaceForNewNumber.append(" ")
+            if (remainsCpy == newNumber && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
             subtrahend = subtrahend(rhv, newNumber)
 
             whiteSpaceForSubtrahend.clear()
