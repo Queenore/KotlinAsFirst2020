@@ -5,6 +5,7 @@ package lesson7.task1
 import lesson3.task1.digitNumber
 import lesson3.task1.pow
 import lesson3.task1.revert
+import lesson5.task1.init
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -95,6 +96,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
                     if (count[0].range.first == 0 || char != stringCpy[count[0].range.first - 1].toLowerCase())
                         result[word] = result.getOrDefault(word, 0) + 1
                     count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
+//                    count = init("""\$word""", RegexOption.IGNORE_CASE).findAll(stringCpy.toLowerCase()).toList()
                 }
             }
         }
@@ -263,6 +265,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
         for (string in reader.readLines()) {
             if (string.toLowerCase().toSet().size == string.length) {
                 if (string.length > length) {
+                    writer.close()
                     writer = File(outputName).bufferedWriter()
                     writer.write(string)
                     length = string.length
@@ -556,6 +559,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var remains = 0
         var newNumber = 0
         var residualNumber = 0
+        var currentNumberOfDigit = 0
         var remainsCpy = -1
         val firstStringLength = 4 + digitNumber(lhv) + digitNumber(rhv)
 
@@ -577,17 +581,19 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     ) - lhv
                 )
                 for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
+                currentNumberOfDigit = digitNumber(residualNumber)
             } else {
                 remains = newNumber - subtrahend
-                residualNumber %= pow(10, digitNumber(residualNumber) - 1)
+                currentNumberOfDigit--
             }
 
             if (remainsCpy != remains && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
-            newNumber = newNumber(remains, takeDigit(residualNumber, digitNumber(residualNumber)))
+            newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
             if (i != 1) {
                 for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
                 if (remains == 0 && newNumber != 0) whiteSpaceForNewNumber.append(" ")
             }
+            if (remainsCpy == newNumber) whiteSpaceForNewNumber.append(" ")
             subtrahend = subtrahend(rhv, newNumber)
 
             whiteSpaceForSubtrahend.clear()
@@ -615,7 +621,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         }
 
         if (digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv)) >= 1) {
-            newNumber = newNumber(remains, takeDigit(residualNumber, digitNumber(residualNumber)))
+            newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
             subtrahend = subtrahend(rhv, newNumber)
             remainsCpy = remains
             remains = newNumber - subtrahend

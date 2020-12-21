@@ -138,7 +138,7 @@ fun bestHighJump(jumps: String): Int {
     val list = jumps.split(' ')
     var result = 0
     for ((index, element) in list.withIndex())
-        if (index % 2 == 1 && element.matches(Regex("""[+]""")) && list[index - 1].toInt() > result)
+        if (index % 2 == 1 && element.contains(Regex("""[+]""")) && list[index - 1].toInt() > result)
             result = list[index - 1].toInt()
     return if (result == 0) -1 else result
 }
