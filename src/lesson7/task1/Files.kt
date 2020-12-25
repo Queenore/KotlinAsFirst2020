@@ -5,7 +5,6 @@ package lesson7.task1
 import lesson3.task1.digitNumber
 import lesson3.task1.pow
 import lesson3.task1.revert
-import lesson5.task1.init
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -89,14 +88,13 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
         File(inputName).bufferedReader().use { reader ->
             for (string in reader.readLines()) {
                 stringCpy = string
-                var count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
+                var count = Regex("""\$word""", RegexOption.IGNORE_CASE).findAll(stringCpy.toLowerCase()).toList()
                 while (count.isNotEmpty()) {
                     char = stringCpy[count[0].range.first].toLowerCase()
                     stringCpy = stringCpy.replaceRange(count[0].range.first..count[0].range.first, "")
                     if (count[0].range.first == 0 || char != stringCpy[count[0].range.first - 1].toLowerCase())
                         result[word] = result.getOrDefault(word, 0) + 1
-                    count = ("""\$word""").toLowerCase().toRegex().findAll(stringCpy.toLowerCase()).toList()
-//                    count = init("""\$word""", RegexOption.IGNORE_CASE).findAll(stringCpy.toLowerCase()).toList()
+                    count = Regex("""\$word""", RegexOption.IGNORE_CASE).findAll(stringCpy.toLowerCase()).toList()
                 }
             }
         }
@@ -645,3 +643,51 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     }
 }
 
+/**
+ * Индивидуальное задание
+ *
+ * Дан текстовый файл, в котором схематично изображена схема прямоугольного мини-лабиринта:
+ * - во всех строках одинаковое количество символов
+ * - символ # обозначает препятствие, символ . свободное место, символ C местоположение камеры в лабиринте (камера одна)
+ *
+ * Функция, которую нужно написать, принимает как параметр имя этого файла. Она должна выбрать и вернуть как результат
+ * количество свободных точек лабиринта, попадающих в зону обозрения камеры, причём:
+ * - зона обозрения камеры — это прямые линии от точки её расположения, идущие в 8 направлениях по горизонтали,
+ * вертикали и диагонали. Сквозь препятствия камера видеть не может (похоже на ход шахматного ферзя).
+ *
+ * Банальный пример:
+ *
+ * xxx..
+ * xC#..
+ * xxx..
+ * .#.x.
+ *
+ * здесь зона обозрения камеры показана символами x, в неё входит всего 8 точек.
+ */
+
+fun cameraOverview(inputName: String): Int {
+    var result = 0
+    var stringNumber = -1
+    val matrix = mutableMapOf<Int, MutableMap<Int, Char>>()
+    var camX = 0
+    var camY = 0
+    File(inputName).forEachLine { string -> // нахождение координат камеры
+        stringNumber++
+        for ((index, element) in string.withIndex())
+            if (element == 'C') {
+                camX = index
+                camY = stringNumber
+            }
+    }
+    stringNumber = -1
+    File(inputName).forEachLine { string -> // создание матрицы (расположение камеры соответствует точке (0, 0))
+        stringNumber++
+        for ((index, element) in string.withIndex()) {
+            if (index == 0) matrix[-stringNumber + camY] = mutableMapOf(Pair(index - camX, element))
+            else matrix[-stringNumber + camY]!![index - camX] = element
+        }
+    }
+
+
+    return result
+}

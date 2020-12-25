@@ -640,4 +640,12 @@ Basic, Ruby, Swift.
 
         File("temp.txt").delete()
     }
+
+    @Test
+    @Tag("individualTask")
+    fun cameraOverview() {
+
+        assertEquals(8, cameraOverview("input/cameraOverview_1.txt"))
+
+    }
 }
