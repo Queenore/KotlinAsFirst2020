@@ -671,23 +671,54 @@ fun cameraOverview(inputName: String): Int {
     val matrix = mutableMapOf<Int, MutableMap<Int, Char>>()
     var camX = 0
     var camY = 0
+    var minX = 0
+    var maxX = 0
+    var minY = 0
+    var maxY = 0
     File(inputName).forEachLine { string -> // нахождение координат камеры
         stringNumber++
         for ((index, element) in string.withIndex())
             if (element == 'C') {
                 camX = index
-                camY = stringNumber
+                camY = -stringNumber
             }
     }
     stringNumber = -1
     File(inputName).forEachLine { string -> // создание матрицы (расположение камеры соответствует точке (0, 0))
         stringNumber++
         for ((index, element) in string.withIndex()) {
-            if (index == 0) matrix[-stringNumber + camY] = mutableMapOf(Pair(index - camX, element))
-            else matrix[-stringNumber + camY]!![index - camX] = element
+            if (index == 0) matrix[-stringNumber - camY] = mutableMapOf(Pair(index - camX, element))
+            else matrix[-stringNumber - camY]!![index - camX] = element
+            if (index == string.length - 1) {
+                maxX = index - camX
+                minY = -stringNumber - camY
+            } else if (stringNumber == 0 && index == 0) {
+                minX = index - camX
+                maxY = -stringNumber - camY
+            }
         }
     }
-
-
+    val list = mutableListOf(-1 to 1, 0 to 1, 1 to 1, 1 to 0, 1 to -1, 0 to -1, -1 to -1, -1 to 0) // создание списка с
+    // единичными векторами (при каждой итерации значение пары будет увеличиваться на начальное значение)
+    val listCpy = mutableListOf(-1 to 1, 0 to 1, 1 to 1, 1 to 0, 1 to -1, 0 to -1, -1 to -1, -1 to 0) // список для
+    // увеличения list на начальное значение
+    val removeList = mutableListOf<Pair<Int, Int>>() // лист для записи элементов, которые предстоит удалить из list
+    val removeListCpy = mutableListOf<Int>() // лист для индексов элементов, которые предстоит удалить из listCpy
+    while (list.size != 0) { //поиск количества клеток, которые покрывает камера
+        for ((x, y) in list)
+            if (x in minX..maxX && y in minY..maxY) {
+                if (matrix[y]!![x] == '.') result++
+                else if (matrix[y]!![x] == '#') {
+                    removeList.add(Pair(x, y))
+                }
+            } else removeList.add(Pair(x, y))
+        for ((index, elem) in list.withIndex()) // перебор по списку для того, чтобы узнать индексы элементов, которые предстоит удалить из listCpy
+            if (removeList.contains(elem)) removeListCpy.add(index)
+        for (i in removeListCpy.reversed()) listCpy.removeAt(i)
+        list -= removeList
+        for (i in 0 until list.size) // увеличение значения элементов list
+            list[i] = Pair(list[i].first + listCpy[i].first, list[i].second + listCpy[i].second)
+        removeListCpy.clear()
+    }
     return result
 }
