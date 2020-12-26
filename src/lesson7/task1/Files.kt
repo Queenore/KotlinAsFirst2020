@@ -708,9 +708,8 @@ fun cameraOverview(inputName: String): Int {
         for ((x, y) in list)
             if (x in minX..maxX && y in minY..maxY) {
                 if (matrix[y]!![x] == '.') result++
-                else if (matrix[y]!![x] == '#') {
+                else if (matrix[y]!![x] == '#')
                     removeList.add(Pair(x, y))
-                }
             } else removeList.add(Pair(x, y))
         for ((index, elem) in list.withIndex()) // перебор по списку для того, чтобы узнать индексы элементов, которые предстоит удалить из listCpy
             if (removeList.contains(elem)) removeListCpy.add(index)
