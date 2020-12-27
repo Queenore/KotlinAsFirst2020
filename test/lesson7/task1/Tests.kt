@@ -649,6 +649,7 @@ Basic, Ruby, Swift.
         assertEquals(16, cameraOverview("input/cameraOverview_2.txt"))
         assertEquals(9, cameraOverview("input/cameraOverview_3.txt"))
         assertEquals(12, cameraOverview("input/cameraOverview_4.txt"))
+        assertEquals(0, cameraOverview("input/cameraOverview_5.txt"))
 
     }
 }
