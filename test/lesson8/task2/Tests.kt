@@ -3,6 +3,7 @@ package lesson8.task2
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import java.lang.IllegalArgumentException
 import kotlin.math.abs
 
 class Tests {
@@ -76,6 +77,7 @@ class Tests {
         assertEquals(0, bishopMoveNumber(square("d4"), square("d4")))
         assertEquals(1, bishopMoveNumber(square("a3"), square("e7")))
         assertEquals(2, bishopMoveNumber(square("c1"), square("c7")))
+        assertEquals(IllegalArgumentException(), bishopMoveNumber(square("ssd3"), square("a1")))
     }
 
     private fun List<Square>.assertBishopTrajectory(start: Square, end: Square, length: Int) {
