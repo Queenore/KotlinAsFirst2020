@@ -117,7 +117,7 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
 fun bishopMoveNumber(start: Square, end: Square): Int = when {
     (start == end) -> 0
     (!start.inside() || !end.inside() || (start.column + start.row) % 2 != (end.column + end.row) % 2) -> -1
-    abs(start.column - end.column) == abs(start.row - end.row) -> 1
+    kotlin.math.abs(start.column - end.column) == kotlin.math.abs(start.row - end.row) -> 1
     (start.column + start.row) % 2 == (end.column + end.row) % 2 -> 2
     else -> throw IllegalArgumentException()
 }
