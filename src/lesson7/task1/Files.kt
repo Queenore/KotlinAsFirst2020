@@ -3,9 +3,9 @@
 package lesson7.task1
 
 import lesson3.task1.digitNumber
-import lesson3.task1.pow
-import lesson3.task1.revert
 import java.io.File
+//import lesson3.task1.pow
+//import lesson3.task1.revert
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -520,128 +520,130 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
-fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String): Int = TODO()
 
-    fun digitInPosition(number: Int, position: Int): Int {
-        var result = 0
-        var i = 0
-        var revertNumber = revert(number)
-        while (i != position) {
-            i++
-            result = revertNumber % 10
-            revertNumber /= 10
-        }
-        return result
-    }
-
-    fun currentNumber(lhv: Int, rhv: Int): Int {
-        if (lhv < rhv) return 0
-        var i = 0
-        var currentNumber = 0
-        while (currentNumber / rhv == 0) {
-            currentNumber = currentNumber * 10 + digitInPosition(lhv, i + 1)
-            i++
-        }
-        return currentNumber
-    }
-
-    fun newNumber(remains: Int, digit: Int) = remains * 10 + digit
-
-    fun subtrahend(rhv: Int, current: Int) = current / rhv * rhv
-
-    File(outputName).bufferedWriter().use { out ->
-        val secondStringWhiteSpace = StringBuilder()
-        val dash = StringBuilder()
-        val whiteSpaceForSubtrahend = StringBuilder()
-        val whiteSpaceForNewNumber = StringBuilder(" ")
-        var remains = 0
-        var newNumber = 0
-        var residualNumber = 0
-        var currentNumberOfDigit = 0
-        var remainsCpy = -1
-        var numberOfZero = 0
-        var flag = 1
-        val firstStringLength = 4 + digitNumber(lhv) + digitNumber(rhv)
-
-        for (i in 1..firstStringLength - 1 - digitNumber(rhv) - digitNumber(currentNumber(lhv, rhv)))
-            secondStringWhiteSpace.append(" ")
-        out.write(" $lhv | $rhv\n")
-        var subtrahend = subtrahend(rhv, currentNumber(lhv, rhv))
-        for (i in 1..digitNumber(subtrahend) + 1) dash.append("-")
-        out.write("-$subtrahend$secondStringWhiteSpace${lhv / rhv}\n")
-        out.write("$dash\n")
-
-        for (i in 1..digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv))) {
-            if (i == 1) {
-                remains = currentNumber(lhv, rhv) - subtrahend(rhv, currentNumber(lhv, rhv))
-                residualNumber = kotlin.math.abs(
-                    currentNumber(lhv, rhv) * pow(
-                        10,
-                        digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv))
-                    ) - lhv
-                )
-                if (digitNumber(residualNumber) + currentNumber(lhv, rhv) != lhv)
-                    numberOfZero = digitNumber(lhv) - digitNumber(residualNumber) - digitNumber(currentNumber(lhv, rhv))
-                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
-                currentNumberOfDigit = digitNumber(residualNumber)
-            } else {
-                remains = newNumber - subtrahend
-                if (numberOfZero == 0 && flag < 1) currentNumberOfDigit--
-            }
-
-            if (remainsCpy != remains && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
-            if (numberOfZero > 0) {
-                newNumber = newNumber(remains, 0)
-                numberOfZero--
-            } else {
-                newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
-                flag--
-            }
-            if (i != 1) {
-                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
-                if (remains == 0 && remainsCpy == 0 && newNumber != 0)
-                    whiteSpaceForNewNumber.append(" ")
-            }
-            if (remainsCpy == newNumber && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
-            subtrahend = subtrahend(rhv, newNumber)
-
-            whiteSpaceForSubtrahend.clear()
-            whiteSpaceForSubtrahend.append(whiteSpaceForNewNumber)
-            if (digitNumber(newNumber) == digitNumber(subtrahend) && remains != 0) {
-                whiteSpaceForSubtrahend.clear()
-                whiteSpaceForSubtrahend.append(whiteSpaceForNewNumber.substring(1 until whiteSpaceForNewNumber.length))
-            } else for (j in 1 until digitNumber(newNumber) - digitNumber(subtrahend)) whiteSpaceForSubtrahend.append(" ")
-            dash.clear()
-            if (digitNumber(subtrahend) + 1 >= digitNumber(remains))
-                for (j in 0..digitNumber(subtrahend)) dash.append("-")
-            else for (j in 0..digitNumber(remains)) dash.append("-")
-
-            if (digitNumber(subtrahend) + 1 >= digitNumber(remains)) {
-                if (remains == 0)
-                    out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
-                else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
-            } else {
-                if (remains == 0)
-                    out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForNewNumber$dash\n")
-                else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForNewNumber$dash\n")
-            }
-
-            remainsCpy = remains
-        }
-
-        if (digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv)) >= 1) {
-            newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
-            subtrahend = subtrahend(rhv, newNumber)
-            remainsCpy = remains
-            remains = newNumber - subtrahend
-        } else remains = lhv - subtrahend
-
-        for (i in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
-        if (remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
-
-        out.write("$whiteSpaceForNewNumber$remains")
-    }
-}
+//{
+//
+//    fun digitInPosition(number: Int, position: Int): Int {
+//        var result = 0
+//        var i = 0
+//        var revertNumber = revert(number)
+//        while (i != position) {
+//            i++
+//            result = revertNumber % 10
+//            revertNumber /= 10
+//        }
+//        return result
+//    }
+//
+//    fun currentNumber(lhv: Int, rhv: Int): Int {
+//        if (lhv < rhv) return 0
+//        var i = 0
+//        var currentNumber = 0
+//        while (currentNumber / rhv == 0) {
+//            currentNumber = currentNumber * 10 + digitInPosition(lhv, i + 1)
+//            i++
+//        }
+//        return currentNumber
+//    }
+//
+//    fun newNumber(remains: Int, digit: Int) = remains * 10 + digit
+//
+//    fun subtrahend(rhv: Int, current: Int) = current / rhv * rhv
+//
+//    File(outputName).bufferedWriter().use { out ->
+//        val secondStringWhiteSpace = StringBuilder()
+//        val dash = StringBuilder()
+//        val whiteSpaceForSubtrahend = StringBuilder()
+//        val whiteSpaceForNewNumber = StringBuilder(" ")
+//        var remains = 0
+//        var newNumber = 0
+//        var residualNumber = 0
+//        var currentNumberOfDigit = 0
+//        var remainsCpy = -1
+//        var numberOfZero = 0
+//        var flag = 1
+//        val firstStringLength = 4 + digitNumber(lhv) + digitNumber(rhv)
+//
+//        for (i in 1..firstStringLength - 1 - digitNumber(rhv) - digitNumber(currentNumber(lhv, rhv)))
+//            secondStringWhiteSpace.append(" ")
+//        out.write(" $lhv | $rhv\n")
+//        var subtrahend = subtrahend(rhv, currentNumber(lhv, rhv))
+//        for (i in 1..digitNumber(subtrahend) + 1) dash.append("-")
+//        out.write("-$subtrahend$secondStringWhiteSpace${lhv / rhv}\n")
+//        out.write("$dash\n")
+//
+//        for (i in 1..digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv))) {
+//            if (i == 1) {
+//                remains = currentNumber(lhv, rhv) - subtrahend(rhv, currentNumber(lhv, rhv))
+//                residualNumber = kotlin.math.abs(
+//                    currentNumber(lhv, rhv) * pow(
+//                        10,
+//                        digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv))
+//                    ) - lhv
+//                )
+//                if (digitNumber(residualNumber) + currentNumber(lhv, rhv) != lhv)
+//                    numberOfZero = digitNumber(lhv) - digitNumber(residualNumber) - digitNumber(currentNumber(lhv, rhv))
+//                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
+//                currentNumberOfDigit = digitNumber(residualNumber)
+//            } else {
+//                remains = newNumber - subtrahend
+//                if (numberOfZero == 0 && flag < 1) currentNumberOfDigit--
+//            }
+//
+//            if (remainsCpy != remains && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
+//            if (numberOfZero > 0) {
+//                newNumber = newNumber(remains, 0)
+//                numberOfZero--
+//            } else {
+//                newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
+//                flag--
+//            }
+//            if (i != 1) {
+//                for (j in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
+//                if (remains == 0 && remainsCpy == 0 && newNumber != 0)
+//                    whiteSpaceForNewNumber.append(" ")
+//            }
+//            if (remainsCpy == newNumber && remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
+//            subtrahend = subtrahend(rhv, newNumber)
+//
+//            whiteSpaceForSubtrahend.clear()
+//            whiteSpaceForSubtrahend.append(whiteSpaceForNewNumber)
+//            if (digitNumber(newNumber) == digitNumber(subtrahend) && remains != 0) {
+//                whiteSpaceForSubtrahend.clear()
+//                whiteSpaceForSubtrahend.append(whiteSpaceForNewNumber.substring(1 until whiteSpaceForNewNumber.length))
+//            } else for (j in 1 until digitNumber(newNumber) - digitNumber(subtrahend)) whiteSpaceForSubtrahend.append(" ")
+//            dash.clear()
+//            if (digitNumber(subtrahend) + 1 >= digitNumber(remains))
+//                for (j in 0..digitNumber(subtrahend)) dash.append("-")
+//            else for (j in 0..digitNumber(remains)) dash.append("-")
+//
+//            if (digitNumber(subtrahend) + 1 >= digitNumber(remains)) {
+//                if (remains == 0)
+//                    out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+//                else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForSubtrahend$dash\n")
+//            } else {
+//                if (remains == 0)
+//                    out.write("${whiteSpaceForNewNumber}0$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForNewNumber$dash\n")
+//                else out.write("${whiteSpaceForNewNumber}$newNumber\n$whiteSpaceForSubtrahend-$subtrahend\n$whiteSpaceForNewNumber$dash\n")
+//            }
+//
+//            remainsCpy = remains
+//        }
+//
+//        if (digitNumber(lhv) - digitNumber(currentNumber(lhv, rhv)) >= 1) {
+//            newNumber = newNumber(remains, takeDigit(residualNumber, currentNumberOfDigit))
+//            subtrahend = subtrahend(rhv, newNumber)
+//            remainsCpy = remains
+//            remains = newNumber - subtrahend
+//        } else remains = lhv - subtrahend
+//
+//        for (i in 1..digitNumber(subtrahend) - digitNumber(remains)) whiteSpaceForNewNumber.append(" ")
+//        if (remainsCpy == 0) whiteSpaceForNewNumber.append(" ")
+//
+//        out.write("$whiteSpaceForNewNumber$remains")
+//    }
+//}
 
 /**
  * Индивидуальное задание
